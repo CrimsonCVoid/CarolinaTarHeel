@@ -70,6 +70,12 @@ export interface TemplateDefinition {
   description: string;
   pages: PageDefinition<z.ZodTypeAny>[];
   settingsEditorMeta: Record<string, FieldMeta>;
+  /**
+   * Reference SiteSettings shipped with the template — used by spec-preview
+   * routes that render the template against `defaultContent` without a
+   * Supabase row, so the Footer/Nav/Hours have realistic brand values.
+   */
+  defaultSettings?: SiteSettings;
 }
 
 export type { Address, WeeklyHours, Brand, Contact, Social, SeoDefaults };

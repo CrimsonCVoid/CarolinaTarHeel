@@ -21,6 +21,7 @@ import {
   defaultPrivateEvents,
   defaultCareers,
   defaultContact,
+  defaultSettings,
 } from './default-content';
 import {
   homeEditorMeta,
@@ -132,4 +133,5 @@ export const restaurantV2: TemplateDefinition = {
     },
   ],
   settingsEditorMeta,
+  defaultSettings,
 };
