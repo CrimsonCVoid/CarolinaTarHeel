@@ -36,7 +36,8 @@ export default async function EditPage({
     .limit(20);
 
   const previewToken = signPreviewToken(site.id, site.preview_secret);
-  const previewUrl = `https://${site.domain}/api/preview?token=${previewToken}&slug=${encodeURIComponent(slug)}`;
+  const previewPath = slug === '/' ? '' : slug;
+  const previewUrl = `/preview/${site.id}${previewPath}?token=${previewToken}`;
 
   return (
     <Container className="py-8">
