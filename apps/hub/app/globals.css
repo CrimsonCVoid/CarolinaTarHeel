@@ -235,13 +235,29 @@
       ),
       linear-gradient(180deg, var(--sp-charcoal) 0%, var(--sp-charcoal-2) 60%, var(--sp-charcoal) 100%);
   }
+  /* Hero overlay: layered linear (top-to-bottom darken) + radial (vignette
+   * centered behind the headline). Together they keep mid-tone areas of
+   * the taproom photo from washing out white text. The radial sits a
+   * little above center because the H1 sits a little above center. */
   .spec-southern-peak section[class*="bg-slate-900"] [class*="bg-gradient-to-b"] {
-    background: linear-gradient(
-      180deg,
-      rgba(13, 20, 17, 0.55) 0%,
-      rgba(13, 20, 17, 0.35) 40%,
-      rgba(13, 20, 17, 0.85) 100%
-    );
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 45%, rgba(13, 20, 17, 0.55) 0%, transparent 75%),
+      linear-gradient(
+        180deg,
+        rgba(13, 20, 17, 0.7) 0%,
+        rgba(13, 20, 17, 0.45) 35%,
+        rgba(13, 20, 17, 0.55) 65%,
+        rgba(13, 20, 17, 0.92) 100%
+      );
+  }
+  /* Hero text gets a soft shadow so it reads against any region of the
+   * photo behind the gradient. Just enough to anchor white on light pixels;
+   * not enough to look like a 2010s drop-shadow effect. */
+  .spec-southern-peak section[class*="bg-slate-900"][class*="text-white"] h1 {
+    text-shadow: 0 2px 18px rgba(0, 0, 0, 0.55), 0 1px 2px rgba(0, 0, 0, 0.35);
+  }
+  .spec-southern-peak section[class*="bg-slate-900"][class*="text-white"] p {
+    text-shadow: 0 1px 10px rgba(0, 0, 0, 0.55);
   }
 
   /* Page-load section stagger — first few sections fade up with offset. */
@@ -271,14 +287,17 @@
     .spec-southern-peak section:nth-of-type(n) { animation-delay: 0ms; }
   }
 
-  /* Hero one-shot zoom on mount. */
+  /* Hero one-shot zoom on mount. Image opacity dialed back so the dark
+   * gradient overlay can do its job; the photo still reads, but as
+   * environment, not as foreground subject. */
   @keyframes thw-hero-zoom {
     from { transform: scale(1.06); }
     to   { transform: scale(1); }
   }
   .spec-southern-peak section img[sizes="100vw"] {
     animation: thw-hero-zoom 14s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    opacity: 0.72;
+    opacity: 0.6;
+    filter: saturate(0.95) brightness(0.92);
   }
 
   /* Card hover lift used by location/beer/menu cards. */
