@@ -30,3 +30,32 @@ export async function saveSiteSettings(siteId: string, value: Record<string, unk
   }
   revalidatePath(`/sites/${siteId}/settings`);
 }
+
+/**
+ * Updates only `brand.primary` — used by the theme presets picker so the
+ * client can swap palettes without re-saving every other field.
+ */
+export async function applyThemePreset(siteId: string, primary: string) {
+  const { site } = await requireSiteAccess(siteId);
+  const supabase = await createServerClient();
+  const { data: existing } = await supabase
+    .from('site_settings')
+    .select('brand')
+    .eq('site_id', siteId)
+    .maybeSingle();
+  const brand = { ...((existing?.brand as Record<string, unknown> | null) ?? {}), primary };
+  const { error } = await supabase
+    .from('site_settings')
+    .upsert({ site_id: siteId, brand }, { onConflict: 'site_id' });
+  if (error) throw new Error(error.message);
+  try {
+    await fetch(`https://${site.domain}/api/revalidate`, {
+      method: 'POST',
+      headers: { 'x-revalidation-secret': site.revalidation_secret, 'content-type': 'application/json' },
+      body: JSON.stringify({ paths: ['/'] }),
+    });
+  } catch {
+    // best-effort — still updates the DB
+  }
+  revalidatePath(`/sites/${siteId}/settings`);
+}
