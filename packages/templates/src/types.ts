@@ -30,7 +30,13 @@ export interface FieldMeta {
   kind: FieldKind;
   placeholder?: string;
   options?: FieldOption[];
-  itemLabel?: (item: unknown) => string;
+  /**
+   * For `kind: 'array'`. The name of a field on each item that should be shown as
+   * the row label in the editor (e.g. `'name'` for menu items). Must be a static
+   * string — not a function — because editorMeta is serialized across the
+   * RSC → Client Component boundary in the editor shell.
+   */
+  itemLabel?: string;
   fields?: Record<string, FieldMeta>;
   maxLength?: number;
   required?: boolean;

@@ -29,7 +29,7 @@ export const homeEditorMeta: Record<string, FieldMeta> = {
       items: {
         label: 'Items',
         kind: 'array',
-        itemLabel: (i) => (i as { name?: string }).name ?? 'Item',
+        itemLabel: "name",
         fields: {
           name: { label: 'Name', kind: 'text', maxLength: 80, required: true },
           description: { label: 'Description', kind: 'text', maxLength: 200 },
@@ -50,7 +50,7 @@ export const homeEditorMeta: Record<string, FieldMeta> = {
   testimonials: {
     label: 'Testimonials',
     kind: 'array',
-    itemLabel: (t) => (t as { author?: string }).author ?? 'Quote',
+    itemLabel: "author",
     fields: {
       quote: { label: 'Quote', kind: 'textarea', maxLength: 400, required: true },
       author: { label: 'Author', kind: 'text', maxLength: 80, required: true },
@@ -80,14 +80,14 @@ export const menuEditorMeta: Record<string, FieldMeta> = {
   categories: {
     label: 'Categories',
     kind: 'array',
-    itemLabel: (c) => (c as { name?: string }).name ?? 'Category',
+    itemLabel: "name",
     fields: {
       name: { label: 'Category name', kind: 'text', maxLength: 80, required: true },
       description: { label: 'Description', kind: 'textarea', maxLength: 300 },
       items: {
         label: 'Items',
         kind: 'array',
-        itemLabel: (i) => (i as { name?: string }).name ?? 'Item',
+        itemLabel: "name",
         fields: {
           name: { label: 'Name', kind: 'text', maxLength: 80, required: true },
           description: { label: 'Description', kind: 'textarea', maxLength: 300 },
@@ -130,7 +130,7 @@ export const aboutEditorMeta: Record<string, FieldMeta> = {
   values: {
     label: 'Values / pillars',
     kind: 'array',
-    itemLabel: (v) => (v as { headline?: string }).headline ?? 'Value',
+    itemLabel: "headline",
     fields: {
       headline: { label: 'Headline', kind: 'text', maxLength: 80, required: true },
       body: { label: 'Body', kind: 'textarea', maxLength: 300 },
@@ -152,7 +152,7 @@ export const contactEditorMeta: Record<string, FieldMeta> = {
   faq: {
     label: 'FAQ',
     kind: 'array',
-    itemLabel: (f) => (f as { question?: string }).question ?? 'Q',
+    itemLabel: "question",
     fields: {
       question: { label: 'Question', kind: 'text', maxLength: 160, required: true },
       answer: { label: 'Answer', kind: 'textarea', maxLength: 800, required: true },

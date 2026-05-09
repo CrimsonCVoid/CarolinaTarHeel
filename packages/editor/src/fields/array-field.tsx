@@ -19,6 +19,16 @@ function blankItem(fields: Record<string, FieldMeta> | undefined): unknown {
   return out;
 }
 
+function labelForArrayItem(itemLabel: string | undefined, item: unknown, index: number): string {
+  if (!itemLabel) return `Item ${index + 1}`;
+  if (itemLabel === '_') return typeof item === 'string' ? item || `Item ${index + 1}` : `Item ${index + 1}`;
+  if (item && typeof item === 'object') {
+    const v = (item as Record<string, unknown>)[itemLabel];
+    if (typeof v === 'string' && v.length > 0) return v;
+  }
+  return `Item ${index + 1}`;
+}
+
 export function ArrayField({ name, meta, value, onChange }: FieldComponentProps) {
   const items = Array.isArray(value) ? value : [];
   const itemFields = meta.fields ?? {};
@@ -52,7 +62,7 @@ export function ArrayField({ name, meta, value, onChange }: FieldComponentProps)
           <li key={i} className="rounded-xl border border-slate-200 bg-slate-50 p-4">
             <div className="mb-3 flex items-center justify-between">
               <span className="text-xs font-medium uppercase tracking-wide text-slate-500">
-                {meta.itemLabel ? meta.itemLabel(item) : `Item ${i + 1}`}
+                {labelForArrayItem(meta.itemLabel, item, i)}
               </span>
               <div className="flex items-center gap-1">
                 <button

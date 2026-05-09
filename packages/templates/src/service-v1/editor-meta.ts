@@ -26,7 +26,7 @@ export const homeEditorMeta: Record<string, FieldMeta> = {
       items: {
         label: 'Items',
         kind: 'array',
-        itemLabel: (i) => (i as { headline?: string }).headline ?? 'Item',
+        itemLabel: "headline",
         fields: {
           headline: { label: 'Headline', kind: 'text', maxLength: 60, required: true },
           body: { label: 'Body', kind: 'text', maxLength: 140 },
@@ -45,7 +45,7 @@ export const homeEditorMeta: Record<string, FieldMeta> = {
   services: {
     label: 'Services grid',
     kind: 'array',
-    itemLabel: (s) => (s as { name?: string }).name ?? 'Service',
+    itemLabel: "name",
     fields: {
       name: { label: 'Name', kind: 'text', maxLength: 80, required: true },
       body: { label: 'Body', kind: 'textarea', maxLength: 300, required: true },
@@ -73,7 +73,7 @@ export const homeEditorMeta: Record<string, FieldMeta> = {
       primaryAreas: {
         label: 'Cities / areas',
         kind: 'array',
-        itemLabel: (a) => String(a),
+        itemLabel: "_",
         fields: { _: { label: 'Area', kind: 'text', maxLength: 60 } },
       },
     },
@@ -81,7 +81,7 @@ export const homeEditorMeta: Record<string, FieldMeta> = {
   testimonials: {
     label: 'Testimonials',
     kind: 'array',
-    itemLabel: (t) => (t as { author?: string }).author ?? 'Quote',
+    itemLabel: "author",
     fields: {
       quote: { label: 'Quote', kind: 'textarea', maxLength: 400, required: true },
       author: { label: 'Author', kind: 'text', maxLength: 80, required: true },
@@ -111,14 +111,14 @@ export const servicesEditorMeta: Record<string, FieldMeta> = {
   services: {
     label: 'Services',
     kind: 'array',
-    itemLabel: (s) => (s as { name?: string }).name ?? 'Service',
+    itemLabel: "name",
     fields: {
       name: { label: 'Name', kind: 'text', maxLength: 80, required: true },
       body: { label: 'Body', kind: 'textarea', maxLength: 800, required: true },
       bullets: {
         label: 'Bullets',
         kind: 'array',
-        itemLabel: (b) => String(b),
+        itemLabel: "_",
         fields: { _: { label: 'Bullet', kind: 'text', maxLength: 120 } },
       },
       image: { label: 'Image', kind: 'image' },
@@ -138,7 +138,7 @@ export const areasEditorMeta: Record<string, FieldMeta> = {
   areas: {
     label: 'Areas',
     kind: 'array',
-    itemLabel: (a) => (a as { name?: string }).name ?? 'Area',
+    itemLabel: "name",
     fields: {
       name: { label: 'Name', kind: 'text', maxLength: 60, required: true },
       zip: { label: 'ZIP code(s)', kind: 'text', maxLength: 20 },
@@ -167,7 +167,7 @@ export const aboutEditorMeta: Record<string, FieldMeta> = {
   team: {
     label: 'Team',
     kind: 'array',
-    itemLabel: (m) => (m as { name?: string }).name ?? 'Member',
+    itemLabel: "name",
     fields: {
       name: { label: 'Name', kind: 'text', maxLength: 80, required: true },
       role: { label: 'Role', kind: 'text', maxLength: 80, required: true },
@@ -190,7 +190,7 @@ export const contactEditorMeta: Record<string, FieldMeta> = {
   faq: {
     label: 'FAQ',
     kind: 'array',
-    itemLabel: (f) => (f as { question?: string }).question ?? 'Q',
+    itemLabel: "question",
     fields: {
       question: { label: 'Question', kind: 'text', maxLength: 160, required: true },
       answer: { label: 'Answer', kind: 'textarea', maxLength: 800, required: true },
