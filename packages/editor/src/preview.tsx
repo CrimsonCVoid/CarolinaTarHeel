@@ -33,7 +33,7 @@ export function PreviewIframe({ src, refreshKey = 0 }: Props) {
         ref={ref}
         src={src}
         title="Preview"
-        className="block h-[calc(100vh-9rem)] min-h-[600px] w-full bg-white"
+        className="block h-[90vh] min-h-[700px] w-full bg-white"
       />
     </div>
   );

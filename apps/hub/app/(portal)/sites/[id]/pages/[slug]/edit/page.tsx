@@ -45,6 +45,7 @@ export default async function EditPage({
         siteId={id}
         siteDomain={site.domain}
         slug={slug}
+        pageTitle={pageDef.title}
         templateId={site.template_id}
         editorMeta={pageDef.editorMeta}
         initialDraft={(page?.draft_content as Record<string, unknown>) ?? (pageDef.defaultContent as Record<string, unknown>)}

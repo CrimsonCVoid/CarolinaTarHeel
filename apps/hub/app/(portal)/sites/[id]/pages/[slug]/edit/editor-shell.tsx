@@ -10,6 +10,7 @@ interface Props {
   siteId: string;
   siteDomain: string;
   slug: string;
+  pageTitle: string;
   templateId: string;
   editorMeta: Record<string, FieldMeta>;
   initialDraft: Record<string, unknown>;
@@ -21,6 +22,7 @@ export function EditorShell({
   siteId,
   siteDomain: _siteDomain,
   slug,
+  pageTitle,
   templateId: _templateId,
   editorMeta,
   initialDraft,
@@ -80,8 +82,13 @@ export function EditorShell({
     <EditorProvider value={{ siteId, upload }}>
       <div className="grid gap-8 lg:grid-cols-[minmax(0,420px)_minmax(0,1fr)]">
         <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h2 className="font-display text-xl font-semibold tracking-tight text-slate-900">{slug}</h2>
+          <div className="flex items-center justify-between gap-4">
+            <div className="min-w-0">
+              <h2 className="truncate font-display text-xl font-semibold tracking-tight text-slate-900">
+                {pageTitle}
+              </h2>
+              <p className="truncate text-xs text-slate-500">{slug}</p>
+            </div>
             <div className="flex items-center gap-3 text-xs text-slate-500">
               {isPending ? 'Saving…' : savedAt ? `Saved ${savedAt.toLocaleTimeString()}` : 'Not saved'}
               <Button onClick={handlePublish} disabled={isPending}>
