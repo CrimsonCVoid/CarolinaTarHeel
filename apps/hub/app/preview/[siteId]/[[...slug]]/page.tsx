@@ -46,7 +46,12 @@ export default async function PreviewPage({ params, searchParams }: Props) {
   }
 
   const [pageRes, settingsRes] = await Promise.all([
-    admin.from('pages').select('slug, draft_content').eq('site_id', siteId).eq('slug', path).maybeSingle(),
+    admin
+      .from('pages')
+      .select('slug, template_page_key, draft_content')
+      .eq('site_id', siteId)
+      .eq('slug', path)
+      .maybeSingle(),
     admin.from('site_settings').select('brand, contact, hours, social, seo').eq('site_id', siteId).maybeSingle(),
   ]);
 
@@ -55,18 +60,18 @@ export default async function PreviewPage({ params, searchParams }: Props) {
   const settings = (settingsRes.data ?? DEFAULT_SETTINGS) as SiteSettings;
 
   /*
-   * The PreviewSurface client component hydrates with the persisted
-   * draft and then accepts live updates from the editor parent over
-   * postMessage. RefreshListener kept as a safety net — if a sibling
-   * tab edits via a different code path, router.refresh() pulls the
-   * fresh DB state.
+   * Render via template_page_key (stable schema identifier) — pages.slug
+   * is now editable and represents only the URL path. Falls back to slug
+   * for any rows that haven't been migrated yet (defensive).
    */
+  const templatePageKey = (pageRes.data.template_page_key as string | null) ?? (pageRes.data.slug as string);
+
   return (
     <>
       <RefreshListener />
       <PreviewSurface
         templateId={site.template_id as string}
-        slug={pageRes.data.slug as string}
+        slug={templatePageKey}
         initialContent={pageRes.data.draft_content}
         initialSettings={settings}
       />

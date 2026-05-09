@@ -13,6 +13,9 @@ interface SiteRow {
 
 interface PageRow {
   slug: string;
+  /** Stable schema lookup key — pages.template_page_key. Falls back to
+   *  slug for rows that pre-date migration 0002. */
+  templatePageKey: string;
   title: string | null;
   meta_description: string | null;
   og_image_url: string | null;
@@ -52,8 +55,8 @@ export const fetchPublishedPage = cache(
   async (slug: string, opts?: { preview?: boolean }): Promise<PageRow | null> => {
     const supabase = siteSupabase();
     const select = opts?.preview
-      ? 'slug, title, meta_description, og_image_url, draft_content'
-      : 'slug, title, meta_description, og_image_url, published_content';
+      ? 'slug, template_page_key, title, meta_description, og_image_url, draft_content'
+      : 'slug, template_page_key, title, meta_description, og_image_url, published_content';
     const { data, error } = await supabase
       .from('pages')
       .select(select)
@@ -67,6 +70,7 @@ export const fetchPublishedPage = cache(
     if (!content && !opts?.preview) return null;
     return {
       slug: row['slug'] as string,
+      templatePageKey: ((row['template_page_key'] as string | null) ?? (row['slug'] as string)) as string,
       title: (row['title'] as string | null) ?? null,
       meta_description: (row['meta_description'] as string | null) ?? null,
       og_image_url: (row['og_image_url'] as string | null) ?? null,

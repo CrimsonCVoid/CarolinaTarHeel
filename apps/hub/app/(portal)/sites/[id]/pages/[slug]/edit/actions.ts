@@ -104,6 +104,81 @@ export async function publishPage(siteId: string, slug: string) {
 }
 
 /**
+ * Rename a page's URL slug. Validates, ensures uniqueness per site,
+ * updates the row, and revalidates both old and new paths on the live
+ * site. The template_page_key is NOT touched — schema binding stays.
+ *
+ * Old URL becomes a 404 after rename (no redirects table yet). Will
+ * add server-side redirects when we have multiple clients asking for
+ * SEO-safe migrations.
+ */
+const SLUG_RE = /^\/[a-z0-9](?:[a-z0-9-/]*[a-z0-9])?$/;
+
+export async function renameSlug(
+  siteId: string,
+  currentSlug: string,
+  nextSlug: string,
+): Promise<{ slug: string }> {
+  const { user, site } = await requireSiteAccess(siteId);
+  const raw = nextSlug.trim().toLowerCase();
+  const cleaned = raw === '' || raw === '/' ? '/' : raw.startsWith('/') ? raw : `/${raw}`;
+  if (cleaned !== '/' && !SLUG_RE.test(cleaned)) {
+    throw new Error(
+      'Slug must be lowercase letters, numbers, or hyphens, separated by /. Example: /menu or /our-services.',
+    );
+  }
+  if (cleaned === currentSlug) return { slug: currentSlug };
+
+  const supabase = await createServerClient();
+  const { data: existing } = await supabase
+    .from('pages')
+    .select('id')
+    .eq('site_id', siteId)
+    .eq('slug', cleaned)
+    .maybeSingle();
+  if (existing) throw new Error(`Another page on this site already uses ${cleaned}.`);
+
+  const { data: page } = await supabase
+    .from('pages')
+    .select('id')
+    .eq('site_id', siteId)
+    .eq('slug', currentSlug)
+    .single();
+  if (!page) throw new Error('Page not found');
+
+  const { error: updErr } = await supabase.from('pages').update({ slug: cleaned }).eq('id', page.id);
+  if (updErr) throw new Error(updErr.message);
+
+  try {
+    await fetch(`https://${site.domain}/api/revalidate`, {
+      method: 'POST',
+      headers: { 'x-revalidation-secret': site.revalidation_secret, 'content-type': 'application/json' },
+      body: JSON.stringify({ paths: [currentSlug, cleaned] }),
+    });
+  } catch (e) {
+    console.warn('Revalidation request failed (non-fatal):', e);
+  }
+
+  await supabase.from('audit_log').insert({
+    org_id: site.org_id,
+    site_id: siteId,
+    user_id: user.id,
+    action: 'page.rename',
+    metadata: { from: currentSlug, to: cleaned },
+  });
+
+  await track('page_renamed', {
+    distinctId: user.id,
+    properties: { from: currentSlug, to: cleaned, domain: site.domain },
+    groups: { organization: site.org_id, site: siteId },
+  });
+
+  revalidatePath(`/sites/${siteId}`);
+  revalidatePath(`/sites/${siteId}/pages`);
+  return { slug: cleaned };
+}
+
+/**
  * Fetches a single version's content. Used by the Preview button on the
  * version-history list — the editor pushes this content into the iframe
  * so the user can see the snapshot without overwriting their current

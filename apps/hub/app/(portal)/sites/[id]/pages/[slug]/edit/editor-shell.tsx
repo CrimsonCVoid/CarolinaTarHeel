@@ -12,13 +12,18 @@ import {
   type PageVersion,
 } from '@tarheel/editor';
 import type { FieldMeta } from '@tarheel/templates';
-import { saveDraft, publishPage, restoreVersion, uploadMedia, getVersionContent } from './actions';
+import { saveDraft, publishPage, restoreVersion, uploadMedia, getVersionContent, renameSlug } from './actions';
+import { useRouter } from 'next/navigation';
 import { PublishCelebration, type PublishStage } from '@/components/publish-celebration';
 
 interface Props {
   siteId: string;
   siteDomain: string;
   slug: string;
+  /** The stable schema identifier for this page — what the template's
+   *  pages array uses. Distinct from `slug`, which is the URL the slug
+   *  rename UI mutates. */
+  templatePageKey: string;
   pageTitle: string;
   templateId: string;
   editorMeta: Record<string, FieldMeta>;
@@ -31,6 +36,7 @@ export function EditorShell({
   siteId,
   siteDomain: _siteDomain,
   slug,
+  templatePageKey,
   pageTitle,
   templateId: _templateId,
   editorMeta,
@@ -38,6 +44,7 @@ export function EditorShell({
   previewUrl,
   versions,
 }: Props) {
+  const router = useRouter();
   const [draft, setDraft] = useState(initialDraft);
   const [refreshKey, setRefreshKey] = useState(0);
   const [savedAt, setSavedAt] = useState<Date | null>(null);
@@ -171,6 +178,27 @@ export function EditorShell({
     postPreview(lastDraftRef.current);
   };
 
+  const [slugDraft, setSlugDraft] = useState(slug);
+  const [slugSaving, setSlugSaving] = useState(false);
+  const [slugError, setSlugError] = useState<string | null>(null);
+  const slugDirty = slugDraft !== slug;
+
+  const handleSlugSave = async () => {
+    setSlugError(null);
+    setSlugSaving(true);
+    try {
+      const out = await renameSlug(siteId, slug, slugDraft);
+      // Navigate to the new edit URL — the underlying URL slug just
+      // changed and the page won't be reachable at the old path.
+      router.push(`/sites/${siteId}/pages/${encodeURIComponent(out.slug)}/edit`);
+      router.refresh();
+    } catch (e) {
+      setSlugError(e instanceof Error ? e.message : 'Rename failed');
+    } finally {
+      setSlugSaving(false);
+    }
+  };
+
   const upload = useCallback(
     async (file: File) => {
       const fd = new FormData();
@@ -209,6 +237,52 @@ export function EditorShell({
           {error ? (
             <div className="mb-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-800">{error}</div>
           ) : null}
+          <details className="mb-6 rounded-2xl border border-slate-200 bg-white">
+            <summary className="cursor-pointer px-5 py-4 text-sm font-semibold text-slate-900">
+              Page settings <span className="ml-2 text-xs font-normal text-slate-500">URL · {slug}</span>
+            </summary>
+            <div className="space-y-3 border-t border-slate-200 px-5 py-4">
+              <div>
+                <label className="text-xs font-medium uppercase tracking-wider text-slate-500" htmlFor="page-slug">
+                  URL path
+                </label>
+                <div className="mt-1.5 flex items-center gap-2">
+                  <span className="text-xs text-slate-500">{_siteDomain}</span>
+                  <input
+                    id="page-slug"
+                    value={slugDraft}
+                    onChange={(e) => setSlugDraft(e.target.value)}
+                    placeholder="/menu"
+                    className="flex h-9 flex-1 rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-900 shadow-sm transition-colors duration-[var(--dur-fast)] focus-visible:bg-brand-50/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600"
+                  />
+                </div>
+                <p className="mt-1.5 text-xs text-slate-500">
+                  Lowercase letters, numbers, hyphens. Use <code className="rounded bg-slate-100 px-1">/</code> for the homepage.
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button size="sm" onClick={handleSlugSave} disabled={!slugDirty || slugSaving}>
+                  {slugSaving ? 'Saving…' : 'Save URL'}
+                </Button>
+                {slugDirty ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSlugDraft(slug);
+                      setSlugError(null);
+                    }}
+                    className="text-xs text-slate-600 hover:text-brand-700"
+                  >
+                    Cancel
+                  </button>
+                ) : null}
+                {slugError ? <span className="text-xs text-red-600">{slugError}</span> : null}
+              </div>
+              <p className="text-[11px] text-slate-400">
+                Page schema: <code className="rounded bg-slate-100 px-1">{templatePageKey}</code> (won&apos;t change when you rename the URL).
+              </p>
+            </div>
+          </details>
           <FormFromSchema meta={editorMeta} value={draft} onChange={handleDraftChange} onAutosave={handleAutosave} />
           <details className="mt-6 rounded-2xl border border-slate-200 bg-white">
             <summary className="cursor-pointer px-5 py-4 text-sm font-semibold text-slate-900">

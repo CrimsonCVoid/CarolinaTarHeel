@@ -16,21 +16,27 @@ export default async function EditPage({
   const slug = decodeURIComponent(slugParam);
   const { site } = await requireSiteAccess(id);
   const template = getTemplate(site.template_id);
-  const pageDef = template.pages.find((p) => p.slug === slug);
-  if (!pageDef) notFound();
 
   const supabase = await createServerClient();
   const { data: page } = await supabase
     .from('pages')
-    .select('id, slug, draft_content, published_content, status, updated_at')
+    .select('id, slug, template_page_key, draft_content, published_content, status, updated_at')
     .eq('site_id', id)
     .eq('slug', slug)
     .maybeSingle();
+  if (!page) notFound();
+
+  // Resolve the schema by template_page_key (stable identifier), not by
+  // the URL slug — pages.slug is now editable and may not match any
+  // template page.
+  const templatePageKey = (page.template_page_key as string | null) ?? (page.slug as string);
+  const pageDef = template.pages.find((p) => p.slug === templatePageKey);
+  if (!pageDef) notFound();
 
   const { data: versions } = await supabase
     .from('page_versions')
     .select('id, reason, created_at, edited_by')
-    .eq('page_id', page?.id ?? '00000000-0000-0000-0000-000000000000')
+    .eq('page_id', page.id)
     .order('created_at', { ascending: false })
     .limit(20);
 
@@ -43,10 +49,11 @@ export default async function EditPage({
       siteId={id}
       siteDomain={site.domain}
       slug={slug}
+      templatePageKey={templatePageKey}
       pageTitle={pageDef.title}
       templateId={site.template_id}
       editorMeta={pageDef.editorMeta}
-      initialDraft={(page?.draft_content as Record<string, unknown>) ?? (pageDef.defaultContent as Record<string, unknown>)}
+      initialDraft={(page.draft_content as Record<string, unknown>) ?? (pageDef.defaultContent as Record<string, unknown>)}
       previewUrl={previewUrl}
       versions={versions ?? []}
     />

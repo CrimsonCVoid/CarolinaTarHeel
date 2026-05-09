@@ -42,5 +42,7 @@ export default async function CatchAllPage({ params }: RouteProps) {
 
   if (!page) notFound();
 
-  return renderTemplate(site.template_id, page.slug, page.content, settings);
+  // Render via template_page_key (stable schema id) — pages.slug is now
+  // editable and only represents the URL path.
+  return renderTemplate(site.template_id, page.templatePageKey, page.content, settings);
 }
