@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Café Old Site</title>
+  <!-- Render-blocking external CSS, no font-display, four nested stylesheets. The exact pattern Wix/Squarespace
+       templates ship by default. -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lobster&family=Open+Sans:wght@400;700&family=Playfair+Display:wght@700&family=Roboto+Slab&display=block">
+  <style>
+    /* Big, unscoped, redundant — also typical. */
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;font-family:'Open Sans',sans-serif;color:#222;line-height:1.6}
+    h1,h2{font-family:'Playfair Display',serif;font-weight:700}
+    .nav{display:flex;justify-content:space-between;padding:14px 18px;background:#222;color:#fff}
+    .brand{font-family:'Lobster',cursive;font-size:18px}
+    .hero{position:relative;height:280px;background-size:cover;background-position:center}
+    .hero-overlay{position:absolute;inset:0;background:rgba(0,0,0,.45);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:0 16px}
+    .hero h1{margin:0;font-size:30px}
+    .hero p{margin:6px 0 0;font-size:13px}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:16px}
+    .card{background:#f7f7f7;border-radius:8px;overflow:hidden;border:1px solid #ddd}
+    .card-img{aspect-ratio:4/3;background:#bbb}
+    .card-body{padding:8px;font-size:11px}
+    .footer{padding:16px;background:#222;color:#aaa;font-size:11px;text-align:center}
+    .cookie{position:fixed;left:8px;right:8px;bottom:8px;background:#fff;border:1px solid #999;border-radius:4px;padding:10px;font-size:11px;box-shadow:0 4px 18px rgba(0,0,0,.2);transform:translateY(120%);transition:transform .4s}
+    .cookie.show{transform:translateY(0)}
+    .chat{position:fixed;right:12px;bottom:60px;width:48px;height:48px;border-radius:50%;background:#0a84ff;color:#fff;display:none;align-items:center;justify-content:center;font-size:22px;box-shadow:0 6px 18px rgba(0,0,0,.2)}
+    .chat.show{display:flex}
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <span class="brand">Café Old Site</span>
+    <nav style="font-size:12px"><a style="color:#fff;margin-left:10px" href="#">Home</a><a style="color:#fff;margin-left:10px" href="#">Menu</a><a style="color:#fff;margin-left:10px" href="#">About</a><a style="color:#fff;margin-left:10px" href="#">Contact</a></nav>
+  </header>
+  <section class="hero" id="hero">
+    <div class="hero-overlay">
+      <h1>A Taste of Tradition</h1>
+      <p>Family-owned · Since 1998</p>
+    </div>
+  </section>
+  <section class="grid">
+    <div class="card"><div class="card-img" id="img1"></div><div class="card-body"><strong>French Toast</strong><br>$9</div></div>
+    <div class="card"><div class="card-img" id="img2"></div><div class="card-body"><strong>Avo Toast</strong><br>$11</div></div>
+    <div class="card"><div class="card-img" id="img3"></div><div class="card-body"><strong>Huevos</strong><br>$13</div></div>
+  </section>
+  <footer class="footer">© Café Old Site 2026 · all rights reserved</footer>
+
+  <div class="cookie" id="cookie">
+    🍪 We use cookies to enhance your experience. <a href="#">Accept all</a> · <a href="#">Decline</a>
+  </div>
+  <div class="chat" id="chat" aria-hidden="true">💬</div>
+
+  <script>
+    // Same instrumentation as the longleaf demo, reporting source='typical'.
+    (function () {
+      var report = function (metric) {
+        try { parent.postMessage({ type: 'race-metric', source: 'typical', metric: metric }, '*'); } catch (e) {}
+      };
+      try {
+        new PerformanceObserver(function (list) {
+          var entries = list.getEntries();
+          var last = entries[entries.length - 1];
+          if (last) report({ lcp: last.startTime / 1000 });
+        }).observe({ type: 'largest-contentful-paint', buffered: true });
+      } catch (e) {}
+      try {
+        var cls = 0;
+        new PerformanceObserver(function (list) {
+          for (var i = 0; i < list.getEntries().length; i++) {
+            var e = list.getEntries()[i];
+            if (!e.hadRecentInput) cls += e.value;
+          }
+          report({ cls: cls });
+        }).observe({ type: 'layout-shift', buffered: true });
+      } catch (e) {}
+      try {
+        new PerformanceObserver(function () {
+          var entries = performance.getEntriesByType('resource');
+          var total = 0;
+          for (var i = 0; i < entries.length; i++) total += entries[i].transferSize || 0;
+          report({ bundleKb: Math.round((total / 1024) * 10) / 10, requests: entries.length + 1 });
+        }).observe({ type: 'resource', buffered: true });
+      } catch (e) {}
+      try {
+        var tbt = 0;
+        new PerformanceObserver(function (list) {
+          for (var i = 0; i < list.getEntries().length; i++) {
+            var e = list.getEntries()[i];
+            if (e.duration > 50) tbt += e.duration - 50;
+          }
+          report({ tbt: Math.round(tbt) });
+        }).observe({ type: 'longtask', buffered: true });
+      } catch (e) {}
+    })();
+
+    // Synthetic delays — emulating real SMB-site bloat.
+    // Hero image arrives late and large, causing the overlay layout to shift.
+    setTimeout(function () {
+      var hero = document.getElementById('hero');
+      if (hero) hero.style.backgroundImage = "url('https://placehold.co/1600x900/2c3e50/ffffff?text=Hero+Image')";
+    }, 1500);
+    // Card images pop in late.
+    setTimeout(function () {
+      ['img1','img2','img3'].forEach(function (id, i) {
+        var el = document.getElementById(id);
+        if (el) el.style.background = "linear-gradient(135deg,hsl(" + (200 + i*40) + ",40%,60%),hsl(" + (220 + i*40) + ",40%,40%))";
+      });
+    }, 4500);
+    // Cookie banner slides up at 3s — classic CLS event.
+    setTimeout(function () {
+      document.getElementById('cookie').classList.add('show');
+    }, 3000);
+    // Chat widget appears at 5s — another CLS hit.
+    setTimeout(function () {
+      document.getElementById('chat').classList.add('show');
+    }, 5500);
+    // Long task to drag TBT.
+    setTimeout(function () {
+      var t0 = performance.now();
+      while (performance.now() - t0 < 220) { /* burn */ }
+    }, 1200);
+    setTimeout(function () {
+      var t0 = performance.now();
+      while (performance.now() - t0 < 180) { /* burn */ }
+    }, 2400);
+  </script>
+</body>
+</html>

@@ -32,6 +32,18 @@
   --stagger-tight: 40ms;
   --stagger-base: 60ms;
   --stagger-loose: 100ms;
+
+  /* === Data-viz palette (FRONTPAGE.md §3) — only used inside chart
+     components. Distinct from brand chrome so charts can be rich without
+     dragging the brand visuals along. */
+  --color-data-1: #2b5272;
+  --color-data-2: #b8492c;
+  --color-data-3: #447ea8;
+  --color-data-4: #e0a458;
+  --color-data-5: #5c8d89;
+  --color-success-700: #15803d;
+  --color-warning-600: #b45309;
+  --color-danger-600: #b91c1c;
 }
 
 @layer base {

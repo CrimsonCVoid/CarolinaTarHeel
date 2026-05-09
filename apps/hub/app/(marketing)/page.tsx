@@ -1,138 +1,148 @@
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { Container } from '@tarheel/ui';
-import { RevealSection } from '@/components/reveal-section';
-import { HeroCanvas } from '@/components/hero-canvas';
-import { PerformanceComparison } from '@/components/performance-comparison';
+import { HeroBrowserDemo } from '@/components/hero/hero-browser-demo';
+import { LiveTicker } from '@/components/live-ticker';
+import { FAQ, FAQ_ITEMS } from '@/components/faq';
+import { FinalCTA } from '@/components/final-cta';
+
+// Below-the-fold heavy sections (Recharts ~50 KB, framer-motion ~30 KB gzipped)
+// dynamic-load so they don't blow out First Load JS budgets. Server rendering
+// stays on — HTML is complete for SEO and JSON-LD covers everything.
+const PerformanceRace = dynamic(() =>
+  import('@/components/race/performance-race').then((m) => m.PerformanceRace),
+);
+const SeoProofPanel = dynamic(() =>
+  import('@/components/seo/seo-proof-panel').then((m) => m.SeoProofPanel),
+);
+const PricingSummary = dynamic(() =>
+  import('@/components/pricing/pricing-summary').then((m) => m.PricingSummary),
+);
+const BuildTimeline = dynamic(() =>
+  import('@/components/process/build-timeline').then((m) => m.BuildTimeline),
+);
+const ArchitectureDiagram = dynamic(() =>
+  import('@/components/architecture-diagram').then((m) => m.ArchitectureDiagram),
+);
+const CaseStudies = dynamic(() => import('@/components/case-studies').then((m) => m.CaseStudies));
+const RoiCalculator = dynamic(() =>
+  import('@/components/calc/roi-calculator').then((m) => m.RoiCalculator),
+);
+
+const ORG_LD = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'ProfessionalService',
+      '@id': 'https://tarheelweb.co/#org',
+      name: 'Tar Heel Web Co.',
+      url: 'https://tarheelweb.co',
+      telephone: '+1-919-555-0100',
+      email: 'hello@tarheelweb.co',
+      areaServed: [{ '@type': 'State', name: 'North Carolina' }],
+      address: { '@type': 'PostalAddress', addressRegion: 'NC', addressCountry: 'US' },
+      priceRange: '$$',
+      offers: [
+        { '@type': 'Offer', name: 'Starter', price: '750', priceCurrency: 'USD' },
+        { '@type': 'Offer', name: 'Standard', price: '1500', priceCurrency: 'USD' },
+        { '@type': 'Offer', name: 'Premium', price: '2750', priceCurrency: 'USD' },
+      ],
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: FAQ_ITEMS.map((q) => ({
+        '@type': 'Question',
+        name: q.q,
+        acceptedAnswer: { '@type': 'Answer', text: q.a },
+      })),
+    },
+  ],
+};
 
 export default function MarketingHome() {
   return (
     <>
-      <section className="relative isolate overflow-hidden bg-slate-900 text-white">
-        <HeroCanvas />
-        <Container className="relative z-10 py-24 md:py-32">
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="text-sm font-semibold uppercase tracking-wide text-brand-200 motion-safe:animate-[thw-rise_var(--dur-medium)_var(--ease-out-expo)]">
-              Built in Carolina · For Carolina
+      {/* §1 Hero */}
+      <section className="bg-white">
+        <Container className="grid gap-12 py-16 md:py-20 lg:grid-cols-[minmax(0,1fr)_minmax(0,540px)] lg:gap-16">
+          <div className="flex flex-col justify-center">
+            <p className="text-sm font-semibold uppercase tracking-wider text-brand-700 motion-safe:animate-[thw-rise_var(--dur-medium)_var(--ease-out-expo)]">
+              Modern websites for North Carolina small businesses
             </p>
-            <h1 className="mt-4 font-display text-5xl font-semibold tracking-tight text-white md:text-6xl motion-safe:animate-[thw-rise-large_var(--dur-slow)_var(--ease-out-expo)]">
-              Fast websites, simple pricing,
+            <h1 className="mt-4 font-display text-5xl font-semibold tracking-tight text-slate-900 md:text-6xl motion-safe:animate-[thw-rise-large_var(--dur-slow)_var(--ease-out-expo)]">
+              Built in 7 days.
               <br />
-              <span className="text-brand-300">no platform fees</span>.
+              Hosted by a Carolina team.
+              <br />
+              <span className="text-brand-700">Half the price of an agency.</span>
             </h1>
-            <p className="mt-6 text-lg leading-relaxed text-slate-200 motion-safe:animate-[thw-rise_var(--dur-medium)_var(--ease-out-expo)_120ms_both]">
-              Productized website builds for small NC businesses — restaurants, med spas, law firms, home
-              services. Half the price of an agency, ten times faster than Wix.
-            </p>
-            <div className="mt-10 flex flex-wrap justify-center gap-4 motion-safe:animate-[thw-rise_var(--dur-medium)_var(--ease-out-expo)_240ms_both]">
+            <div className="mt-8 flex flex-wrap gap-3 motion-safe:animate-[thw-rise_var(--dur-medium)_var(--ease-out-expo)_120ms_both]">
               <Link
                 href="/contact"
-                className="inline-flex h-12 items-center rounded-2xl bg-white px-6 text-base font-medium text-slate-900 transition-colors duration-[var(--dur-fast)] hover:bg-slate-100 active:scale-[0.97] motion-reduce:active:scale-100"
+                className="inline-flex h-12 items-center rounded-2xl bg-brand-600 px-6 text-base font-medium text-white transition-colors duration-[var(--dur-fast)] hover:bg-brand-700 active:scale-[0.97] motion-reduce:active:scale-100"
               >
-                Book a discovery call
+                Book a 15-min call →
               </Link>
               <Link
-                href="/pricing"
-                className="inline-flex h-12 items-center rounded-2xl border border-white/40 px-6 text-base font-medium text-white transition-colors duration-[var(--dur-fast)] hover:bg-white/10 active:scale-[0.97] motion-reduce:active:scale-100"
+                href="/portfolio"
+                className="inline-flex h-12 items-center rounded-2xl border border-slate-300 px-6 text-base font-medium text-slate-900 transition-colors duration-[var(--dur-fast)] hover:bg-slate-50 active:scale-[0.97] motion-reduce:active:scale-100"
               >
-                See pricing
+                See our work →
               </Link>
             </div>
+            <ul className="mt-10 space-y-2 text-sm text-slate-700 motion-safe:animate-[thw-rise_var(--dur-medium)_var(--ease-out-expo)_240ms_both]">
+              <li className="flex gap-2">
+                <span className="text-brand-600">✓</span>UNC Kenan-Flagler + ECU engineering
+              </li>
+              <li className="flex gap-2">
+                <span className="text-brand-600">✓</span>Live in 5–7 days with content in hand
+              </li>
+              <li className="flex gap-2">
+                <span className="text-brand-600">✓</span>$750–$2,750 build · $39–$129/mo hosting
+              </li>
+            </ul>
+          </div>
+          <div className="flex items-center">
+            <HeroBrowserDemo />
           </div>
         </Container>
       </section>
 
-      <RevealSection className="border-y border-slate-200 bg-slate-50">
-        <Container className="py-16 md:py-20">
-          <ul className="grid gap-8 md:grid-cols-3">
-            <li>
-              <p className="font-display text-3xl font-semibold text-slate-900">95+</p>
-              <p className="mt-1 text-sm font-medium text-slate-700">Lighthouse mobile, every site</p>
-              <p className="mt-2 text-sm text-slate-600">
-                We refuse to ship a site under 95. Your customers feel it on every tap.
-              </p>
-            </li>
-            <li>
-              <p className="font-display text-3xl font-semibold text-slate-900">&lt; 5s</p>
-              <p className="mt-1 text-sm font-medium text-slate-700">From edit to live</p>
-              <p className="mt-2 text-sm text-slate-600">
-                Update hours, prices, photos. Hit publish. Visitors see it within seconds.
-              </p>
-            </li>
-            <li>
-              <p className="font-display text-3xl font-semibold text-slate-900">$0</p>
-              <p className="mt-1 text-sm font-medium text-slate-700">Lock-in</p>
-              <p className="mt-2 text-sm text-slate-600">
-                Your domain, your content. One-click export. Walk away whenever.
-              </p>
-            </li>
-          </ul>
-        </Container>
-      </RevealSection>
+      {/* §2 Live ticker */}
+      <LiveTicker />
 
-      <RevealSection className="bg-white">
-        <Container className="py-20 md:py-24">
-          <div className="mx-auto max-w-3xl text-center">
-            <h2 className="font-display text-3xl font-semibold tracking-tight text-slate-900 md:text-4xl">
-              Watch a typical SMB site load. Then watch ours.
-            </h2>
-            <p className="mt-4 text-lg leading-relaxed text-slate-700">
-              Real numbers from real audits. Both panels run in real time when you scroll here.
-            </p>
-          </div>
-          <PerformanceComparison />
-        </Container>
-      </RevealSection>
+      {/* §3 Performance race */}
+      <PerformanceRace />
 
-      <RevealSection className="bg-slate-50">
-        <Container className="py-20 md:py-24">
-          <div className="grid gap-12 lg:grid-cols-2">
-            <div>
-              <h2 className="font-display text-3xl font-semibold tracking-tight text-slate-900 md:text-4xl">
-                The performance moat is real
-              </h2>
-              <p className="mt-6 text-lg leading-relaxed text-slate-700">
-                Wix and Squarespace ship megabytes of editor JavaScript to every visitor. Our public sites ship
-                under 150 KB — the same as a static brochure site, but you can edit any field in seconds.
-              </p>
-              <p className="mt-4 text-base text-slate-700">
-                On a 4G phone in your customer&apos;s pocket, that&apos;s the difference between a site that loads
-                in 1 second and one that loads in 6.
-              </p>
-            </div>
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-8">
-              <h3 className="font-display text-xl font-semibold tracking-tight text-slate-900">
-                What you get
-              </h3>
-              <ul className="mt-6 space-y-3 text-base text-slate-700">
-                <li className="flex gap-3"><span className="text-brand-600">✓</span> Custom-built site, owned by you</li>
-                <li className="flex gap-3"><span className="text-brand-600">✓</span> Self-serve editor at {process.env.NEXT_PUBLIC_BRAND_DOMAIN ?? 'tarheelweb.co'}</li>
-                <li className="flex gap-3"><span className="text-brand-600">✓</span> Hosting + monitoring + backups</li>
-                <li className="flex gap-3"><span className="text-brand-600">✓</span> Form inbox + email notifications</li>
-                <li className="flex gap-3"><span className="text-brand-600">✓</span> Local NC team, real phone numbers</li>
-              </ul>
-            </div>
-          </div>
-        </Container>
-      </RevealSection>
+      {/* §4 SEO proof */}
+      <SeoProofPanel />
 
-      <RevealSection className="bg-slate-900 text-white">
-        <Container className="py-20 md:py-24">
-          <div className="mx-auto max-w-3xl text-center">
-            <h2 className="font-display text-4xl font-semibold tracking-tight md:text-5xl">
-              Ready to launch this month?
-            </h2>
-            <p className="mt-4 text-lg text-slate-300">
-              We start with a 20-minute call to scope the build. No obligation.
-            </p>
-            <Link
-              href="/contact"
-              className="mt-8 inline-flex h-12 items-center rounded-2xl bg-white px-6 text-base font-medium text-slate-900 hover:bg-slate-100"
-            >
-              Book a call
-            </Link>
-          </div>
-        </Container>
-      </RevealSection>
+      {/* §5 Pricing + math callout */}
+      <PricingSummary />
+
+      {/* §6 Build timeline */}
+      <BuildTimeline />
+
+      {/* §7 Architecture comparison */}
+      <ArchitectureDiagram />
+
+      {/* §8 Case studies */}
+      <CaseStudies />
+
+      {/* §9 ROI calculator */}
+      <RoiCalculator />
+
+      {/* §10 FAQ */}
+      <FAQ />
+
+      {/* §11 Final CTA */}
+      <FinalCTA />
+
+      {/* JSON-LD: ProfessionalService + FAQPage (FRONTPAGE.md §6) */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(ORG_LD) }}
+      />
     </>
   );
 }

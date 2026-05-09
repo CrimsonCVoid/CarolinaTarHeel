@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Joe's Café — Apex, NC</title>
+  <style>
+    /* Inlined critical CSS — entire stylesheet is ~2 KB. No render-blocking. */
+    *,*::before,*::after{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{font-family:system-ui,-apple-system,sans-serif;color:#0f172a;background:#fff;line-height:1.5}
+    .nav{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid #e2e8f0}
+    .brand{font-weight:700;font-size:14px}
+    .nav a{font-size:12px;color:#475569;text-decoration:none;margin-left:12px}
+    .hero{padding:24px 16px;background:linear-gradient(135deg,#33658c 0%,#2b5272 100%);color:#fff;text-align:center}
+    .hero h1{margin:0 0 6px;font-size:18px;font-weight:600}
+    .hero p{margin:0;font-size:11px;opacity:.9}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:12px 16px}
+    .card{background:#f1f5f9;border-radius:8px;padding:8px;font-size:10px}
+    .card-img{aspect-ratio:4/3;background:#cbd5e1;border-radius:4px;margin-bottom:6px}
+    .footer{padding:12px 16px;border-top:1px solid #e2e8f0;text-align:center;font-size:10px;color:#64748b}
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <span class="brand">Joe's Café</span>
+    <nav><a href="#">Menu</a><a href="#">About</a><a href="#">Visit</a></nav>
+  </header>
+  <section class="hero">
+    <h1>Hand-pulled espresso · all day breakfast</h1>
+    <p>Open daily 7am – 3pm · Apex, NC</p>
+  </section>
+  <section class="grid">
+    <div class="card"><div class="card-img"></div>Brioche French Toast · $9</div>
+    <div class="card"><div class="card-img"></div>Avo Toast · $11</div>
+    <div class="card"><div class="card-img"></div>Huevos Rancheros · $13</div>
+  </section>
+  <footer class="footer">© 2026 Joe's Café · 142 Salem St, Apex NC</footer>
+
+  <script>
+    // PerformanceObserver — reports LCP / CLS / TBT-ish to parent window.
+    (function () {
+      var report = function (metric) {
+        try {
+          parent.postMessage({ type: 'race-metric', source: 'longleaf', metric: metric }, '*');
+        } catch (e) {}
+      };
+
+      // LCP — last paint wins.
+      try {
+        new PerformanceObserver(function (list) {
+          var entries = list.getEntries();
+          var last = entries[entries.length - 1];
+          if (last) report({ lcp: last.startTime / 1000 });
+        }).observe({ type: 'largest-contentful-paint', buffered: true });
+      } catch (e) {}
+
+      // CLS — cumulative.
+      try {
+        var cls = 0;
+        new PerformanceObserver(function (list) {
+          for (var i = 0; i < list.getEntries().length; i++) {
+            var e = list.getEntries()[i];
+            if (!e.hadRecentInput) cls += e.value;
+          }
+          report({ cls: cls });
+        }).observe({ type: 'layout-shift', buffered: true });
+      } catch (e) {}
+
+      // Resource transfer size.
+      try {
+        new PerformanceObserver(function () {
+          var entries = performance.getEntriesByType('resource');
+          var total = 0;
+          for (var i = 0; i < entries.length; i++) total += entries[i].transferSize || 0;
+          report({ bundleKb: Math.round((total / 1024) * 10) / 10, requests: entries.length + 1 });
+        }).observe({ type: 'resource', buffered: true });
+      } catch (e) {}
+
+      // Long tasks (TBT proxy).
+      try {
+        var tbt = 0;
+        new PerformanceObserver(function (list) {
+          for (var i = 0; i < list.getEntries().length; i++) {
+            var e = list.getEntries()[i];
+            if (e.duration > 50) tbt += e.duration - 50;
+          }
+          report({ tbt: Math.round(tbt) });
+        }).observe({ type: 'longtask', buffered: true });
+      } catch (e) {}
+
+      window.addEventListener('load', function () {
+        report({ done: true });
+      });
+    })();
+  </script>
+</body>
+</html>

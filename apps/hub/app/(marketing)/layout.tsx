@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Container } from '@tarheel/ui';
 import { env } from '@/lib/env';
+import { SiteFooter } from '@/components/site-footer';
 
 const NAV = [
   { href: '/pricing', label: 'Pricing' },
@@ -37,37 +38,7 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
         </Container>
       </header>
       <main>{children}</main>
-      <footer className="border-t border-slate-200 bg-slate-50 py-12 text-sm text-slate-600">
-        <Container>
-          <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
-            <span>
-              © {new Date().getFullYear()} {env.NEXT_PUBLIC_BRAND_NAME}. Built in North Carolina.
-            </span>
-            <ul className="flex flex-wrap gap-6">
-              <li>
-                <Link href="/pricing" className="hover:text-brand-700">
-                  Pricing
-                </Link>
-              </li>
-              <li>
-                <Link href="/portfolio" className="hover:text-brand-700">
-                  Portfolio
-                </Link>
-              </li>
-              <li>
-                <Link href="/about" className="hover:text-brand-700">
-                  About
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="hover:text-brand-700">
-                  Contact
-                </Link>
-              </li>
-            </ul>
-          </div>
-        </Container>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }
