@@ -1,6 +1,8 @@
 import type { WeeklyHours } from '../types';
 
-const DAYS: Array<{ key: keyof Omit<WeeklyHours, 'note'>; label: string }> = [
+type DayKey = 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun';
+
+const DAYS: Array<{ key: DayKey; label: string }> = [
   { key: 'mon', label: 'Mon' },
   { key: 'tue', label: 'Tue' },
   { key: 'wed', label: 'Wed' },

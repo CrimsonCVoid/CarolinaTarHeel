@@ -1,3 +1,4 @@
+import type { z } from 'zod';
 import type { TemplateDefinition, PageDefinition, SiteSettings } from './types';
 import { restaurantV1 } from './restaurant-v1/index';
 import { serviceV1 } from './service-v1/index';
@@ -19,9 +20,9 @@ export function listTemplates(): TemplateDefinition[] {
   return Object.values(registry);
 }
 
-export function getPage(templateId: string, slug: string): PageDefinition<never> | undefined {
+export function getPage(templateId: string, slug: string): PageDefinition<z.ZodTypeAny> | undefined {
   const t = getTemplate(templateId);
-  return t.pages.find((p) => p.slug === slug) as PageDefinition<never> | undefined;
+  return t.pages.find((p) => p.slug === slug);
 }
 
 /**

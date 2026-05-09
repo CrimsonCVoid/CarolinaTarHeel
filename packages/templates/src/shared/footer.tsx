@@ -42,7 +42,7 @@ export function Footer({ settings }: { settings: SiteSettings }) {
           <div>
             <div className="font-medium text-slate-900">Follow</div>
             <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
-              {Object.entries(settings.social).map(([k, url]) =>
+              {(Object.entries(settings.social) as [string, string | undefined][]).map(([k, url]) =>
                 url ? (
                   <li key={k}>
                     <a className="capitalize hover:text-brand-700" href={url} rel="me noopener">

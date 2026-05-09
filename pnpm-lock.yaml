@@ -252,6 +252,9 @@ importers:
 
   packages/templates:
     dependencies:
+      '@tarheel/db':
+        specifier: workspace:*
+        version: link:../db
       '@tarheel/ui':
         specifier: workspace:*
         version: link:../ui
@@ -271,6 +274,9 @@ importers:
       '@types/react':
         specifier: ^18.3.12
         version: 18.3.28
+      next:
+        specifier: ^15.0.3
+        version: 15.5.18(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       typescript:
         specifier: ^5.6.3
         version: 5.9.3

@@ -34,7 +34,7 @@ export function LeadForm() {
             email: String(fd.get('email')),
             phone: String(fd.get('phone') ?? ''),
             business: String(fd.get('business') ?? ''),
-            tier: String(fd.get('tier') ?? ''),
+            tier: String(fd.get('tier') ?? '') as '' | 'starter' | 'standard' | 'premium',
             message: String(fd.get('message') ?? ''),
           });
           setState('sent');

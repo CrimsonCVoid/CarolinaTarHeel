@@ -1,6 +1,5 @@
 import { createBrowserClient as createSsrBrowser, createServerClient as createSsrServer } from '@supabase/ssr';
 import { createClient } from '@supabase/supabase-js';
-import type { Database } from './database.types';
 
 type CookieStore = {
   getAll(): { name: string; value: string }[];
@@ -17,10 +16,7 @@ function requireEnv(key: string): string {
 
 /** Browser session client. RLS is active via the user's JWT. Safe in client components. */
 export function createBrowserClient() {
-  return createSsrBrowser<Database>(
-    requireEnv('NEXT_PUBLIC_SUPABASE_URL'),
-    requireEnv('NEXT_PUBLIC_SUPABASE_ANON_KEY'),
-  );
+  return createSsrBrowser(requireEnv('NEXT_PUBLIC_SUPABASE_URL'), requireEnv('NEXT_PUBLIC_SUPABASE_ANON_KEY'));
 }
 
 /**
@@ -28,20 +24,16 @@ export function createBrowserClient() {
  * Pass in the cookie store from `next/headers` (or compatible).
  */
 export function createServerClient(cookies: CookieStore) {
-  return createSsrServer<Database>(
-    requireEnv('NEXT_PUBLIC_SUPABASE_URL'),
-    requireEnv('NEXT_PUBLIC_SUPABASE_ANON_KEY'),
-    {
-      cookies: {
-        getAll: () => cookies.getAll(),
-        setAll: (toSet) => {
-          for (const { name, value, options } of toSet) {
-            cookies.set(name, value, options as Record<string, unknown>);
-          }
-        },
+  return createSsrServer(requireEnv('NEXT_PUBLIC_SUPABASE_URL'), requireEnv('NEXT_PUBLIC_SUPABASE_ANON_KEY'), {
+    cookies: {
+      getAll: () => cookies.getAll(),
+      setAll: (toSet: { name: string; value: string; options?: Record<string, unknown> }[]) => {
+        for (const { name, value, options } of toSet) {
+          cookies.set(name, value, options);
+        }
       },
     },
-  );
+  });
 }
 
 /**
@@ -52,7 +44,7 @@ export function createAdminClient() {
   if (typeof window !== 'undefined') {
     throw new Error('createAdminClient() called in a browser context — service role keys must never reach the client.');
   }
-  return createClient<Database>(requireEnv('NEXT_PUBLIC_SUPABASE_URL'), requireEnv('SUPABASE_SERVICE_ROLE_KEY'), {
+  return createClient(requireEnv('NEXT_PUBLIC_SUPABASE_URL'), requireEnv('SUPABASE_SERVICE_ROLE_KEY'), {
     auth: { persistSession: false, autoRefreshToken: false },
   });
 }
