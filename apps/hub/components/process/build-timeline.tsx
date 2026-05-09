@@ -49,24 +49,46 @@ export function BuildTimeline() {
 
           {/* Bars */}
           <div className="relative h-[280px]">
-            {PHASES.map((p, i) => (
-              <motion.div
-                key={p.name}
-                style={{
-                  left: `${((p.day - 1) / 7) * 100}%`,
-                  width: `${(p.length / 7) * 100}%`,
-                  top: i * 36,
-                  transformOrigin: 'left',
-                }}
-                className={`absolute flex h-8 items-center rounded px-3 text-xs font-medium text-white shadow-sm ${VARIANT_BG[p.variant]}`}
-                initial={{ scaleX: 0, opacity: 0 }}
-                whileInView={{ scaleX: 1, opacity: 1 }}
-                viewport={{ once: true, amount: 0.4 }}
-                transition={{ delay: i * 0.12, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              >
-                <span className="truncate">{p.name}</span>
-              </motion.div>
-            ))}
+            {PHASES.map((p, i) => {
+              const leftPct = ((p.day - 1) / 7) * 100;
+              const widthPct = (p.length / 7) * 100;
+              // Bars under ~14% wide can't fit text comfortably — render
+              // the label outside (to the right) instead of clipping it.
+              const labelInside = widthPct >= 14;
+              return (
+                <div
+                  key={p.name}
+                  className="absolute flex h-8 items-center"
+                  style={{ left: `${leftPct}%`, top: i * 36, right: 0 }}
+                >
+                  <motion.span
+                    className={`block h-full rounded shadow-sm ${VARIANT_BG[p.variant]}`}
+                    style={{ width: `${widthPct}%`, transformOrigin: 'left' }}
+                    initial={{ scaleX: 0, opacity: 0 }}
+                    whileInView={{ scaleX: 1, opacity: 1 }}
+                    viewport={{ once: true, amount: 0.4 }}
+                    transition={{ delay: i * 0.12, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    {labelInside ? (
+                      <span className="flex h-full items-center px-3 text-xs font-medium text-white">
+                        {p.name}
+                      </span>
+                    ) : null}
+                  </motion.span>
+                  {!labelInside ? (
+                    <motion.span
+                      className="ml-2 whitespace-nowrap text-xs font-medium text-slate-700"
+                      initial={{ opacity: 0 }}
+                      whileInView={{ opacity: 1 }}
+                      viewport={{ once: true, amount: 0.4 }}
+                      transition={{ delay: i * 0.12 + 0.4, duration: 0.4 }}
+                    >
+                      {p.name}
+                    </motion.span>
+                  ) : null}
+                </div>
+              );
+            })}
           </div>
 
           <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-1 text-xs text-slate-600">
