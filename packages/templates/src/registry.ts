@@ -26,8 +26,9 @@ export function getPage(templateId: string, slug: string): PageDefinition<z.ZodT
 }
 
 /**
- * Render a template page given content + settings. Used by apps/site.
- * Validates content against the page schema; throws on mismatch.
+ * Render a template page given content + settings. Used by apps/site
+ * and the publish gate. Validates content against the page schema;
+ * throws on mismatch — bad data never reaches a live site.
  */
 export function renderTemplate(
   templateId: string,
@@ -39,6 +40,24 @@ export function renderTemplate(
   if (!page) throw new Error(`Page ${slug} not found in template ${templateId}`);
   const parsed = page.schema.parse(content);
   return createElement(page.Component, { content: parsed, settings });
+}
+
+/**
+ * Render without re-validating. Used only by the LIVE editor preview,
+ * which receives mid-edit drafts that may temporarily fail validation
+ * (e.g., a half-typed URL). Components themselves tolerate
+ * partial/missing data — they read fields with optional chaining and
+ * skip blocks that aren't filled. Never use for production rendering.
+ */
+export function renderTemplateUnsafe(
+  templateId: string,
+  slug: string,
+  content: unknown,
+  settings: SiteSettings,
+): ReactElement {
+  const page = getPage(templateId, slug);
+  if (!page) throw new Error(`Page ${slug} not found in template ${templateId}`);
+  return createElement(page.Component, { content: content as never, settings });
 }
 
 export { restaurantV1, serviceV1 };

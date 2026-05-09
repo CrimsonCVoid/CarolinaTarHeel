@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useState, useTransition } from 'react';
+import { useCallback, useEffect, useRef, useState, useTransition } from 'react';
 import { Button } from '@tarheel/ui';
 import {
   AutosaveIndicator,
@@ -46,6 +46,39 @@ export function EditorShell({
   const [status, setStatus] = useState<AutosaveStatus>('idle');
   const [publishStage, setPublishStage] = useState<PublishStage>('idle');
 
+  /*
+   * Live preview channel. Holds a ref to the iframe element and a flag
+   * that flips true when the iframe's PreviewSurface emits 'thw-preview-
+   * ready'. Once ready, every form change is forwarded immediately. The
+   * iframe re-renders client-side without a DB roundtrip — typing feels
+   * synchronous. DB autosave still runs on the 1.5s debounce in parallel.
+   */
+  const iframeReadyRef = useRef(false);
+  const lastDraftRef = useRef(draft);
+
+  useEffect(() => {
+    function onMessage(e: MessageEvent) {
+      if (e.data?.type === 'thw-preview-ready') {
+        iframeReadyRef.current = true;
+        // Push current draft so the iframe matches the editor state on
+        // mount even if the user typed during navigation/hydration.
+        postPreview(lastDraftRef.current);
+      }
+    }
+    window.addEventListener('message', onMessage);
+    return () => window.removeEventListener('message', onMessage);
+  }, []);
+
+  function postPreview(content: Record<string, unknown>) {
+    const iframe = document.querySelector<HTMLIFrameElement>('iframe[data-thw-preview]');
+    if (!iframe?.contentWindow) return;
+    try {
+      iframe.contentWindow.postMessage({ type: 'thw-preview-content', content }, '*');
+    } catch {
+      // ignore
+    }
+  }
+
   const handleAutosave = useCallback(
     (next: Record<string, unknown>) => {
       setStatus('saving');
@@ -64,11 +97,16 @@ export function EditorShell({
     [siteId, slug],
   );
 
-  // Mirror form-level changes to the indicator: "Editing…" appears the
-  // moment the user types, before autosave fires.
+  // Mirror form-level changes:
+  //   - update local draft state (drives the form re-render)
+  //   - flip the autosave indicator to 'editing' immediately
+  //   - postMessage the draft to the preview iframe so it re-renders now,
+  //     long before the 1.5s autosave fires
   const handleDraftChange = useCallback((next: Record<string, unknown>) => {
     setDraft(next);
+    lastDraftRef.current = next;
     setStatus((s) => (s === 'saving' ? s : 'editing'));
+    if (iframeReadyRef.current) postPreview(next);
   }, []);
 
   const handlePublish = () => {

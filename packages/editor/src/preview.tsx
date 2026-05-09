@@ -66,7 +66,13 @@ export function PreviewIframe({ src, refreshKey = 0 }: Props) {
           Open in new tab ↗
         </a>
       </div>
-      <iframe ref={ref} src={src} title="Preview" className="block h-full min-h-0 w-full flex-1 bg-white" />
+      <iframe
+        ref={ref}
+        src={src}
+        title="Preview"
+        data-thw-preview
+        className="block h-full min-h-0 w-full flex-1 bg-white"
+      />
     </div>
   );
 }
