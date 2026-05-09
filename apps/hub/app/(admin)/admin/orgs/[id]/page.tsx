@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle, Container } from '@tarheel/ui';
 import { createServerClient } from '@/lib/supabase/server';
+import { CheckoutButtons } from './checkout-buttons';
 
 export const metadata = { title: 'Organization' };
 
@@ -31,6 +32,22 @@ export default async function OrgDetail({ params }: { params: Promise<{ id: stri
             <div><dt className="text-slate-500">Status</dt><dd className="font-medium">{org?.stripe_subscription_status ?? '—'}</dd></div>
             <div><dt className="text-slate-500">Customer</dt><dd className="font-mono text-xs">{org?.stripe_customer_id ?? '—'}</dd></div>
           </dl>
+        </CardContent>
+      </Card>
+
+      <Card className="mt-6">
+        <CardHeader>
+          <CardTitle>Billing</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <CheckoutButtons
+            orgId={id}
+            currentPlan={(org?.plan as 'starter' | 'standard' | 'premium' | null) ?? null}
+            hasActiveSubscription={
+              org?.stripe_subscription_status === 'active' ||
+              org?.stripe_subscription_status === 'trialing'
+            }
+          />
         </CardContent>
       </Card>
 

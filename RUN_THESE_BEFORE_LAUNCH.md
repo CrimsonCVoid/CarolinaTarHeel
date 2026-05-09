@@ -38,15 +38,24 @@ Fill values as you go through the steps below.
 
 ## 3. Stripe
 
-1. Stripe → Products. Create:
-   - **Build · Starter** — $750 one-time
-   - **Build · Standard** — $1,500 one-time
-   - **Build · Premium** — $2,750 one-time
-   - **Hosting · Starter** — $39/mo recurring
-   - **Hosting · Standard** — $69/mo recurring
-   - **Hosting · Premium** — $129/mo recurring
-2. Copy each price ID into the matching `STRIPE_PRICE_*` env var on the hub.
-3. In Stripe → Developers → Webhooks, add an endpoint to `https://tarheelweb.co/api/stripe/webhook` listening for: `checkout.session.completed`, `customer.subscription.updated`, `customer.subscription.deleted`, `invoice.payment_failed`. Copy the signing secret into `STRIPE_WEBHOOK_SECRET`.
+1. **Run the setup script** to create all 6 products + prices in one shot:
+   ```bash
+   STRIPE_SECRET_KEY=sk_test_... pnpm tsx scripts/stripe-setup.ts
+   ```
+   It prints the `STRIPE_PRICE_*` env-var lines — copy them into your Vercel project. Re-running is idempotent (it finds existing products by metadata key).
+2. **Webhook**: Stripe → Developers → Webhooks → Add endpoint `https://tarheelweb.co/api/stripe/webhook`. Subscribe to:
+   - `checkout.session.completed`
+   - `customer.subscription.updated`
+   - `customer.subscription.deleted`
+   - `customer.subscription.trial_will_end`
+   - `invoice.payment_succeeded`
+   - `invoice.payment_failed`
+   - `customer.updated`
+
+   Copy the signing secret into `STRIPE_WEBHOOK_SECRET`.
+3. **Test mode → Live**: re-run `stripe-setup.ts` with `sk_live_...` to create the same products in live mode, swap the env vars, redeploy. The billing page automatically shows a yellow "Stripe test mode" banner whenever the secret starts with `sk_test_`.
+4. **Customer portal**: enable in Stripe → Settings → Billing → Customer portal. Allow plan changes between Starter/Standard/Premium, allow cancellation, point return URL at `https://tarheelweb.co/dashboard`.
+5. **Test card**: `4242 4242 4242 4242` with any future expiration + any CVC.
 
 ## 4. Resend
 
