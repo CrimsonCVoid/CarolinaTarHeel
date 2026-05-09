@@ -1,0 +1,44 @@
+name: Lighthouse
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'apps/site/**'
+      - 'packages/templates/**'
+      - 'packages/ui/**'
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: 9.12.0 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: pnpm }
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Build site
+        run: pnpm --filter @tarheel/site build
+        env:
+          SUPABASE_URL: https://example.supabase.co
+          SUPABASE_SERVICE_ROLE_KEY: dummy-for-build
+          SITE_ID: 00000000-0000-0000-0000-000000000000
+          REVALIDATION_SECRET: dummy_secret_long_enough_to_pass_zod_validation_xx
+          PREVIEW_SECRET: dummy_secret_long_enough_to_pass_zod_validation_yy
+
+      - name: Start site
+        run: pnpm --filter @tarheel/site start &
+        env:
+          PORT: 3001
+
+      - name: Wait for site
+        run: npx wait-on http://localhost:3001 --timeout 60000
+
+      - name: Run Lighthouse CI
+        run: npx -p @lhci/cli@0.14.x lhci autorun
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}

@@ -1,0 +1,32 @@
+{
+  "name": "@tarheel/editor",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./fields": "./src/fields/index.ts"
+  },
+  "scripts": {
+    "lint": "eslint src",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^3.9.1",
+    "@tarheel/templates": "workspace:*",
+    "@tarheel/ui": "workspace:*",
+    "lucide-react": "^0.460.0",
+    "react-hook-form": "^7.53.2",
+    "zod": "^3.23.8"
+  },
+  "peerDependencies": {
+    "react": "^18 || ^19"
+  },
+  "devDependencies": {
+    "@tarheel/config": "workspace:*",
+    "@types/react": "^18.3.12",
+    "typescript": "^5.6.3"
+  }
+}

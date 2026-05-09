@@ -1,0 +1,11 @@
+/* TEAM */
+  Engineering: Tar Heel Web Co.
+  Location: Raleigh, NC
+
+/* SITE */
+  Last update: 2026
+  Standards: HTML5, CSS3, ES2022
+  Components: Next.js 15, Tailwind 4, Supabase
+  Software: Built in Carolina
+
+# Built fast on purpose. Site bundle <150 KB JS gzipped.

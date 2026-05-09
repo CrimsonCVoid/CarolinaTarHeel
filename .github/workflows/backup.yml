@@ -1,0 +1,41 @@
+name: Nightly content backup
+
+on:
+  schedule:
+    - cron: '0 7 * * *' # 02:00 ET / 07:00 UTC
+  workflow_dispatch:
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: 9.12.0 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+
+      - name: Run backup
+        run: pnpm tsx scripts/backup-content.ts ./content-backups
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+
+      - name: Push to backups repo
+        env:
+          BACKUPS_REPO: ${{ secrets.BACKUPS_REPO }}
+          BACKUPS_TOKEN: ${{ secrets.BACKUPS_TOKEN }}
+        run: |
+          if [ -z "$BACKUPS_REPO" ] || [ -z "$BACKUPS_TOKEN" ]; then
+            echo "BACKUPS_REPO/BACKUPS_TOKEN not set — skipping push"
+            exit 0
+          fi
+          cd ./content-backups
+          git init -q
+          git config user.email "ops@tarheelweb.co"
+          git config user.name  "tarheel-backup-bot"
+          git add -A
+          git commit -q -m "backup $(date -u +%FT%TZ)" || { echo "no changes"; exit 0; }
+          git push -q "https://x-access-token:${BACKUPS_TOKEN}@github.com/${BACKUPS_REPO}.git" HEAD:main --force

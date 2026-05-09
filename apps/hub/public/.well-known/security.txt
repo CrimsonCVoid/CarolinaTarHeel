@@ -1,0 +1,6 @@
+Contact: mailto:security@tarheelweb.co
+Expires: 2027-12-31T23:59:59Z
+Acknowledgments: https://tarheelweb.co/security
+Preferred-Languages: en
+Canonical: https://tarheelweb.co/.well-known/security.txt
+Policy: https://tarheelweb.co/security

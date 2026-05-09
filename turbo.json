@@ -1,0 +1,38 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalEnv": [
+    "NEXT_PUBLIC_SUPABASE_URL",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+    "NEXT_PUBLIC_BRAND_NAME",
+    "NEXT_PUBLIC_BRAND_DOMAIN",
+    "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY",
+    "NEXT_PUBLIC_TURNSTILE_SITE_KEY",
+    "NEXT_PUBLIC_SENTRY_DSN"
+  ],
+  "globalPassThroughEnv": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "STRIPE_SECRET_KEY",
+    "STRIPE_WEBHOOK_SECRET",
+    "RESEND_API_KEY",
+    "RESEND_FROM_EMAIL",
+    "VERCEL_API_TOKEN",
+    "VERCEL_TEAM_ID",
+    "VERCEL_SITE_TEMPLATE_PROJECT_ID",
+    "TURNSTILE_SECRET_KEY",
+    "SITE_ID",
+    "REVALIDATION_SECRET",
+    "PREVIEW_SECRET",
+    "FORM_NOTIFICATION_EMAIL"
+  ],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+    },
+    "dev": { "cache": false, "persistent": true },
+    "lint": { "outputs": [] },
+    "typecheck": { "dependsOn": ["^build"], "outputs": [] },
+    "test": { "outputs": [] },
+    "clean": { "cache": false }
+  }
+}
