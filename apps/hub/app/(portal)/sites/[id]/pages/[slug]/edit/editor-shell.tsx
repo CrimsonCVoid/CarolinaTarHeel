@@ -118,11 +118,12 @@ export function EditorShell({
   return (
     <EditorProvider value={{ siteId, upload }}>
       {/*
-        Split-pane app shell. Outer container is exactly viewport-height
-        minus the (portal) layout's 4rem header and the site-tabs subnav
-        (~6.5rem on desktop). Each pane scrolls independently.
+        Split-pane app shell — exactly viewport-height. Sidebar lives to
+        the left (in the portal layout) so this column has no top chrome
+        of its own. Left pane scrolls the form independently; right pane
+        iframe fills the column.
       */}
-      <div className="grid h-[calc(100vh-10.5rem)] grid-cols-1 lg:grid-cols-[minmax(0,420px)_minmax(0,1fr)]">
+      <div className="grid h-screen grid-cols-1 lg:grid-cols-[minmax(0,420px)_minmax(0,1fr)]">
         <div className="flex min-h-0 flex-col overflow-y-auto border-slate-200 px-6 py-6 lg:border-r">
           <div className="mb-6 flex items-center justify-between gap-4">
             <div className="min-w-0">
