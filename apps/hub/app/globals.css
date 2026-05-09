@@ -128,24 +128,303 @@
 
   /* ==================================================================
    * Spec preview — Southern Peak Brewery skin
-   * Scoped CSS-variable overrides so the spec preview reads as Southern
-   * Peak's green wordmark identity, not Tar Heel Web Co.'s blue. Shared
-   * v2 components reference --color-brand-* via Tailwind v4's @theme;
-   * redefining those vars on a wrapper element re-skins everything
-   * inside without touching component code.
+   * Brewery-specialized override of the agency template. Re-skins brand
+   * tokens to Southern Peak green, layers in cream + copper + charcoal
+   * brewery palette, swaps section backgrounds for richer color, pumps
+   * up display typography, and adds film-grain texture + ambient motion
+   * graphics (marquee tape, rotating stamp). Hub-tier motion budget
+   * (MOTION.md §1) — continuous loops permitted here.
    * ================================================================== */
   .spec-southern-peak {
-    --color-brand-50:  #f0f7ee;
-    --color-brand-100: #d8ebd2;
-    --color-brand-200: #b1d4a3;
-    --color-brand-300: #82b870;
-    --color-brand-400: #589b48;
+    /* Re-skinned brand-* (used by every shared v2 component) */
+    --color-brand-50:  #f0f4ec;
+    --color-brand-100: #d6e0c9;
+    --color-brand-200: #b1c79c;
+    --color-brand-300: #82a96e;
+    --color-brand-400: #589047;
     --color-brand-500: #3a7a3a;
     --color-brand-600: #2d6230;
     --color-brand-700: #244e26;
     --color-brand-800: #1d3d1f;
-    --color-brand-900: #172f19;
-    --color-brand-950: #0d1c0e;
+    --color-brand-900: #102217;
+    --color-brand-950: #07140d;
+
+    /* Brewery palette — used by the overrides below */
+    --sp-cream:    #f3e7c9;
+    --sp-cream-2:  #efe0b8;
+    --sp-paper:    #faf3e0;
+    --sp-copper:   #c47a16;
+    --sp-copper-2: #d99a3a;
+    --sp-charcoal: #0d1411;
+    --sp-charcoal-2: #142019;
+    --sp-brick:    #6e2a18;
+    --sp-foam:     #fdf6dc;
+  }
+
+  /* Body color drift — page background tints toward cream so the
+   * agency-default white sections sit on a warm canvas, not stark white. */
+  .spec-southern-peak {
+    background-color: var(--sp-paper);
+    color: #1a1a18;
+  }
+
+  /* Film grain texture — fixed position, behind content, very low opacity.
+   * Inline SVG turbulence noise. No JS, ~0.5KB. */
+  .spec-southern-peak::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.06;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='4'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.65 0'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>");
+    background-size: 200px 200px;
+  }
+  .spec-southern-peak > * {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Section recoloring — agency template uses bg-white / bg-slate-50 /
+   * bg-slate-900. Recolor those to cream / paper / deep-forest so the
+   * page reads as a brewery, not a generic restaurant. */
+  .spec-southern-peak section.bg-white,
+  .spec-southern-peak section[class*="bg-white"] {
+    background-color: transparent;
+  }
+  .spec-southern-peak section.bg-slate-50,
+  .spec-southern-peak section[class*="bg-slate-50"] {
+    background-color: var(--sp-cream-2);
+  }
+  .spec-southern-peak section.bg-slate-900,
+  .spec-southern-peak section[class*="bg-slate-900"] {
+    background-color: var(--sp-charcoal);
+  }
+
+  /* Display typography pump. Hero h1 grows to a confident brewery scale
+   * — 3.5rem → 6.5rem fluid, 0.95 leading, tight tracking, heavier weight.
+   * Section h2s get a bump too. Eyebrows take the copper accent. */
+  .spec-southern-peak section h1 {
+    font-size: clamp(2.75rem, 7vw, 6rem);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 0.96;
+  }
+  .spec-southern-peak section h2 {
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+  }
+  .spec-southern-peak section p[class*="uppercase"][class*="tracking-wide"] {
+    color: var(--sp-copper-2);
+    font-weight: 600;
+    letter-spacing: 0.18em;
+  }
+  /* Big copper-stamp pricing on feature cards */
+  .spec-southern-peak [data-card="hover"] {
+    border: 1px solid rgba(46, 60, 39, 0.12);
+  }
+
+  /* Hero gradient deepens — full charcoal stack, not the slate gradient. */
+  .spec-southern-peak section[class*="bg-slate-900"][class*="text-white"] {
+    background: radial-gradient(
+        ellipse at 70% 30%,
+        rgba(196, 122, 22, 0.18) 0%,
+        transparent 50%
+      ),
+      linear-gradient(180deg, var(--sp-charcoal) 0%, var(--sp-charcoal-2) 60%, var(--sp-charcoal) 100%);
+  }
+  .spec-southern-peak section[class*="bg-slate-900"] [class*="bg-gradient-to-b"] {
+    background: linear-gradient(
+      180deg,
+      rgba(13, 20, 17, 0.55) 0%,
+      rgba(13, 20, 17, 0.35) 40%,
+      rgba(13, 20, 17, 0.85) 100%
+    );
+  }
+
+  /* Page-load section stagger — first few sections fade up with offset. */
+  @keyframes thw-section-rise {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .spec-southern-peak section,
+  .spec-southern-peak main > div > section {
+    animation: thw-section-rise 520ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  }
+  .spec-southern-peak section:nth-of-type(1) { animation-delay: 0ms; }
+  .spec-southern-peak section:nth-of-type(2) { animation-delay: 80ms; }
+  .spec-southern-peak section:nth-of-type(3) { animation-delay: 160ms; }
+  .spec-southern-peak section:nth-of-type(4) { animation-delay: 220ms; }
+  .spec-southern-peak section:nth-of-type(5) { animation-delay: 280ms; }
+  .spec-southern-peak section:nth-of-type(6) { animation-delay: 340ms; }
+  .spec-southern-peak section:nth-of-type(7) { animation-delay: 400ms; }
+  .spec-southern-peak section:nth-of-type(n+8) { animation-delay: 460ms; }
+
+  @supports (animation-timeline: view()) {
+    .spec-southern-peak section {
+      animation: thw-section-rise linear both;
+      animation-timeline: view();
+      animation-range: entry 5% cover 30%;
+    }
+    .spec-southern-peak section:nth-of-type(n) { animation-delay: 0ms; }
+  }
+
+  /* Hero one-shot zoom on mount. */
+  @keyframes thw-hero-zoom {
+    from { transform: scale(1.06); }
+    to   { transform: scale(1); }
+  }
+  .spec-southern-peak section img[sizes="100vw"] {
+    animation: thw-hero-zoom 14s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0.72;
+  }
+
+  /* Card hover lift used by location/beer/menu cards. */
+  .spec-southern-peak [data-card="hover"] {
+    transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 180ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  @media (hover: hover) and (min-width: 1024px) {
+    .spec-southern-peak [data-card="hover"]:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 40px -16px rgba(13, 20, 17, 0.32);
+    }
+  }
+
+  /* ==================================================================
+   * Marquee tape — "NOW POURING · ALLORA PILSNER · BOXCAR BELLE..."
+   * Sits below the spec banner, above the rendered template. Continuous
+   * scroll at constant linear speed, paused on hover. Doubled content
+   * inside so the loop is seamless. Hub-tier — continuous loop allowed.
+   * ================================================================== */
+  @keyframes sp-marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  .sp-marquee-tape {
+    overflow: hidden;
+    background: var(--sp-charcoal);
+    color: var(--sp-cream);
+    border-top: 1px solid rgba(196, 122, 22, 0.4);
+    border-bottom: 1px solid rgba(196, 122, 22, 0.4);
+    box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.4);
+  }
+  .sp-marquee-track {
+    display: flex;
+    width: max-content;
+    animation: sp-marquee 36s linear infinite;
+    will-change: transform;
+  }
+  .sp-marquee-tape:hover .sp-marquee-track {
+    animation-play-state: paused;
+  }
+  .sp-marquee-item {
+    display: inline-flex;
+    align-items: center;
+    padding: 14px 28px;
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .sp-marquee-item--accent {
+    color: var(--sp-copper-2);
+  }
+  .sp-marquee-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--sp-copper);
+    margin: 0 28px;
+    flex-shrink: 0;
+  }
+
+  /* ==================================================================
+   * EST. stamp — fixed bottom-right, slowly rotates. SVG circle text.
+   * Hides on small viewports to keep mobile clean.
+   * ================================================================== */
+  @keyframes sp-stamp-rotate {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+  .sp-stamp {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    width: 132px;
+    height: 132px;
+    z-index: 30;
+    pointer-events: none;
+    animation: sp-stamp-rotate 80s linear infinite;
+    filter: drop-shadow(0 4px 12px rgba(13, 20, 17, 0.25));
+  }
+  @media (max-width: 768px) { .sp-stamp { display: none; } }
+  .sp-stamp text {
+    fill: var(--sp-charcoal);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .sp-stamp circle {
+    fill: var(--sp-cream);
+    stroke: var(--sp-charcoal);
+    stroke-width: 2;
+  }
+  .sp-stamp .sp-stamp-inner {
+    fill: var(--sp-copper);
+    stroke: none;
+  }
+  .sp-stamp .sp-stamp-inner-text {
+    fill: var(--sp-cream);
+    font-weight: 800;
+    font-size: 11px;
+  }
+
+  /* ==================================================================
+   * Foam wave divider — subtle SVG wave at the bottom of dark sections.
+   * Pure CSS, fixed-shape, served as a background-image data URL.
+   * ================================================================== */
+  .spec-southern-peak section[class*="bg-slate-900"]::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 -1px 0;
+    height: 28px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 28' preserveAspectRatio='none'><path d='M0,14 C150,28 350,0 600,14 C850,28 1050,0 1200,14 L1200,28 L0,28 Z' fill='%23f3e7c9'/></svg>");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    pointer-events: none;
+    z-index: 4;
+  }
+
+  /* ==================================================================
+   * Bigger flagship-beer signage. The BeerCard renders a "Flagship"
+   * badge in its footer; in the spec preview, give those cards a
+   * copper top border and a bolder visual identity.
+   * ================================================================== */
+  .spec-southern-peak [data-card="hover"]:has([data-flagship]) {
+    border-top: 3px solid var(--sp-copper);
+  }
+
+  /* Pull-quote-style headline emphasis: every section's first eyebrow
+   * gets a small copper underline as decoration. */
+  .spec-southern-peak section p[class*="uppercase"]::after {
+    content: '';
+    display: block;
+    width: 28px;
+    height: 2px;
+    background: var(--sp-copper);
+    margin-top: 10px;
+  }
+
+  /* Final-CTA panel gets the dramatic dark-on-cream pop. */
+  .spec-southern-peak section[class*="bg-slate-900"] [class*="font-display"] {
+    color: var(--sp-cream);
   }
 
   /* Page-load section stagger — first few sections fade up with offset.

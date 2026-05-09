@@ -8,6 +8,7 @@ import {
 import { renderTemplateUnsafe } from '@tarheel/templates/registry';
 import { SpecBanner } from './spec-banner';
 import { LinkPrefixer } from './link-prefixer';
+import { SpecMarqueeTape, SpecStamp } from './brewery-decorations';
 
 /**
  * Public, no-auth, no-DB spec-preview route. Renders any registered template
@@ -96,11 +97,17 @@ export default async function SpecPreviewPage({ params }: RouteProps) {
   const rendered = renderTemplateUnsafe(template.id, slug, page.defaultContent, settings);
   const prefix = `/spec/${clientSlug}`;
 
+  const showBreweryDecorations = client.themeClass === 'spec-southern-peak';
+
   return (
     <div className={client.themeClass ?? ''}>
       <SpecBanner brandName={client.brandName} cityState={client.cityState} />
       <LinkPrefixer prefix={prefix} />
-      <div className="pt-10">{rendered}</div>
+      <div className="pt-10">
+        {showBreweryDecorations ? <SpecMarqueeTape /> : null}
+        {rendered}
+        {showBreweryDecorations ? <SpecStamp /> : null}
+      </div>
     </div>
   );
 }
