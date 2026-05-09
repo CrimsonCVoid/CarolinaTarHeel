@@ -1,10 +1,11 @@
 import { z } from 'zod';
+import { optionalUrl } from '../zod-helpers';
 
 export const homeContent = z.object({
   hero: z.object({
     headline: z.string().min(1).max(120),
     subheadline: z.string().max(200).optional(),
-    backgroundImage: z.string().url().optional(),
+    backgroundImage: optionalUrl(),
     ctaLabel: z.string().max(40).optional(),
     ctaUrl: z.string().optional(),
   }),
@@ -21,14 +22,17 @@ export const homeContent = z.object({
           name: z.string().max(80),
           description: z.string().max(200).optional(),
           price: z.string().max(20),
-          image: z.string().url().optional(),
+          image: optionalUrl(),
         }),
       )
       .max(6),
   }),
   press: z.object({
     enabled: z.boolean().default(false),
-    logos: z.array(z.string().url()).max(8),
+    logos: z
+      .array(z.preprocess((v) => (typeof v === 'string' && v.trim() === '' ? undefined : v), z.string().url()))
+      .max(8)
+      .default([]),
   }),
   testimonials: z
     .array(
@@ -80,7 +84,7 @@ export const aboutPageContent = z.object({
   story: z.object({
     headline: z.string().max(120),
     body: z.string().max(2000),
-    image: z.string().url().optional(),
+    image: optionalUrl(),
   }),
   values: z
     .array(

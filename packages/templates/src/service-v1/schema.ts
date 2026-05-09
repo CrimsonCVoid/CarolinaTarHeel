@@ -1,10 +1,11 @@
 import { z } from 'zod';
+import { optionalUrl } from '../zod-helpers';
 
 export const homeContent = z.object({
   hero: z.object({
     headline: z.string().min(1).max(120),
     subheadline: z.string().max(200).optional(),
-    backgroundImage: z.string().url().optional(),
+    backgroundImage: optionalUrl(),
     primaryCta: z.object({ label: z.string().max(40), url: z.string() }).optional(),
     emergencyPhone: z.string().max(40).optional(),
   }),
@@ -65,7 +66,7 @@ export const servicesPageContent = z.object({
         name: z.string().max(80),
         body: z.string().max(800),
         bullets: z.array(z.string().max(120)).max(8).optional(),
-        image: z.string().url().optional(),
+        image: optionalUrl(),
       }),
     )
     .max(20),
@@ -101,7 +102,7 @@ export const aboutPageContent = z.object({
       z.object({
         name: z.string().max(80),
         role: z.string().max(80),
-        photo: z.string().url().optional(),
+        photo: optionalUrl(),
         bio: z.string().max(500).optional(),
       }),
     )
