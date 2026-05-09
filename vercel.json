@@ -3,6 +3,5 @@
   "framework": "nextjs",
   "installCommand": "pnpm install --no-strict-peer-dependencies",
   "buildCommand": "pnpm --filter @tarheel/hub build",
-  "outputDirectory": "apps/hub/.next",
-  "ignoreCommand": "git diff --quiet HEAD^ HEAD -- apps/hub packages"
+  "outputDirectory": "apps/hub/.next"
 }
