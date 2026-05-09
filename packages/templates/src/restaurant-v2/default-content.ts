@@ -22,6 +22,12 @@ const TOAST_ORDER_URL =
 const TOAST_EGIFT_URL =
   'https://order.toasttab.com/egiftcards/southern-peak-brewery-2-1451-richardson-road-ste-130';
 
+// Spec-preview asset paths. When this template is used by a real client, these
+// are replaced via the editor with the client's own uploaded photography.
+const PHOTO_TAPROOM = '/spec/southern-peak/DSC_1559.JPG';
+const PHOTO_PRINT = '/spec/southern-peak/Sweetwaterprint5.jpeg';
+const PHOTO_LOGO = '/spec/southern-peak/SPB-Logo_GreenBox_500pi.png';
+
 const sweetwaterLocation: Location = {
   key: 'sweetwater',
   name: 'Sweetwater Taproom & Pizzeria',
@@ -47,6 +53,7 @@ const sweetwaterLocation: Location = {
     note: 'Food orders end one hour before close.',
   },
   hoursNote: 'Food orders end one hour before close.',
+  primaryPhoto: PHOTO_TAPROOM,
   toastOrderUrl: TOAST_ORDER_URL,
   toastEgiftUrl: TOAST_EGIFT_URL,
   features: ['kitchen', 'kid-friendly', 'patio', 'dog-friendly', 'parking', 'private-events'],
@@ -81,6 +88,7 @@ const windyRoadLocation: Location = {
     note: 'Food trucks rotate — check our events page for the weekly schedule.',
   },
   hoursNote: 'Food trucks rotate — check the events page for the weekly schedule.',
+  primaryPhoto: PHOTO_TAPROOM,
   features: ['food-trucks', 'patio', 'dog-friendly', 'parking'],
   socialLinks: {
     instagram: 'https://www.instagram.com/southernpeakbrewery/',
@@ -247,6 +255,7 @@ export const defaultHome: HomeContent = {
     headline: 'Craft Beer. From-Scratch Pizza. In Apex.',
     subheadline:
       'Two taprooms in Apex, NC. Award-winning beer at both. Hand-stretched pizza at our new Sweetwater spot.',
+    backgroundImage: PHOTO_TAPROOM,
     primaryCta: { label: 'Order online', url: TOAST_ORDER_URL },
     secondaryCta: { label: 'See the menu', url: '/food' },
   },
@@ -313,6 +322,7 @@ export const defaultHome: HomeContent = {
     headline: 'Brewed in Apex. Built for the neighborhood.',
     body:
       'Southern Peak started with a simple idea: craft great beer, serve great food, bring people together. Our original Windy Road taproom remains the brewhouse and the rotating-food-truck patio that locals know. In 2025 we opened a second location in Sweetwater Town Center, where Chef Anthony Masino runs a from-scratch pizzeria built around the same beer program.',
+    image: PHOTO_PRINT,
     ctaLabel: 'Read our story',
     ctaUrl: '/about',
   },
@@ -333,6 +343,7 @@ export const defaultSweetwater: LocationDetailContent = {
     headline: 'Sweetwater Taproom & Pizzeria',
     subheadline:
       'Our beer program, plus a from-scratch pizzeria from Chef Anthony Masino. Family-friendly, dog-friendly patio, full kitchen.',
+    backgroundImage: PHOTO_TAPROOM,
   },
   intro: {
     headline: 'Beer + pizza, under one roof.',
@@ -346,7 +357,10 @@ export const defaultSweetwater: LocationDetailContent = {
     { icon: 'private', headline: 'Private events', body: 'Buyouts and reservations for parties up to 80.' },
   ],
   galleryHeadline: 'Inside Sweetwater',
-  gallery: [],
+  gallery: [
+    { url: PHOTO_TAPROOM, alt: 'Inside the Sweetwater taproom' },
+    { url: PHOTO_PRINT, alt: 'Sweetwater Taproom & Pizzeria opening announcement' },
+  ],
   featuredFoodHeadline: 'Pizzeria favorites',
   featuredFood: [
     {
@@ -393,6 +407,7 @@ export const defaultWindyRoad: LocationDetailContent = {
     headline: 'Where it all started',
     subheadline:
       'Our flagship Windy Road taproom and brewhouse. The full beer program, a covered patio, and a different food truck most nights.',
+    backgroundImage: PHOTO_TAPROOM,
   },
   intro: {
     headline: 'The original room.',
@@ -406,7 +421,7 @@ export const defaultWindyRoad: LocationDetailContent = {
     { icon: 'patio', headline: 'Covered patio', body: 'Open year-round with heaters in the cold months.' },
   ],
   galleryHeadline: 'Inside Windy Road',
-  gallery: [],
+  gallery: [{ url: PHOTO_TAPROOM, alt: 'The Windy Road taproom' }],
   featuredFood: [],
   featuredBeerHeadline: 'Brewed on-site',
   featuredBeers: [alloraPilsner, boxcarBelle, midnightConductor, tropikolIpa],
@@ -422,6 +437,7 @@ export const defaultBeer: BeerPageContent = {
   hero: {
     headline: 'Our beer',
     subheadline: 'A working tap list — flagships year-round, seasonals when the weather calls for them.',
+    backgroundImage: PHOTO_TAPROOM,
   },
   intro:
     'Every beer poured at Southern Peak is brewed at our Windy Road brewhouse in Apex. Three flagships you can count on, plus a rotating cast of seasonals and one-offs. The list below is updated weekly — if you’re looking for something specific, give the bar a call.',
@@ -449,6 +465,7 @@ export const defaultFood: FoodPageContent = {
   hero: {
     headline: 'Pizzeria menu',
     subheadline: 'From-scratch dough, house-made sauces, and toppings built around our beer.',
+    backgroundImage: PHOTO_TAPROOM,
     note: 'Pizzeria menu is served at our Sweetwater location. Windy Road hosts rotating food trucks — see the events page.',
   },
   categories: [
@@ -682,11 +699,13 @@ export const defaultAbout: AboutPageContent = {
     eyebrow: 'About Southern Peak',
     headline: 'Brewed in Apex.',
     subheadline: 'Two locations, one beer program, a neighborhood gathering place since day one.',
+    backgroundImage: PHOTO_TAPROOM,
   },
   story: {
     headline: 'Craft great beer. Serve great food. Bring people together.',
     body:
       'Southern Peak Brewery opened on Windy Road as a neighborhood place — a small brewhouse, a covered patio, and the kind of room where regulars know the bartenders by name. For years our food program ran on a rotating slate of local food trucks parked outside. In 2025 we doubled down on the neighborhood by opening a second location in Sweetwater Town Center, this time with a kitchen of our own. Chef Anthony Masino runs the pizzeria there, building a from-scratch menu around the beers we already brew. The mission hasn’t changed: craft great beer, serve great food, bring people together.',
+    image: PHOTO_PRINT,
   },
   team: [
     {
@@ -852,6 +871,7 @@ export const defaultSettings: SiteSettings = {
   brand: {
     name: 'Southern Peak Brewery',
     primary: '#3a7a3a',
+    logoUrl: PHOTO_LOGO,
   },
   contact: {
     phone: '919-629-4015',

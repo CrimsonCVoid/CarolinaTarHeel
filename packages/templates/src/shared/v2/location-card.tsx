@@ -53,15 +53,15 @@ export function LocationCard({ location, variant = 'grid' }: LocationCardProps):
 
   if (variant === 'detail') {
     return (
-      <Card className="overflow-hidden">
+      <Card data-card="hover" className="group overflow-hidden">
         {location.primaryPhoto ? (
-          <div className="relative aspect-[4/3] w-full bg-slate-100">
+          <div className="relative aspect-[4/3] w-full overflow-hidden bg-slate-100">
             <Image
               src={location.primaryPhoto}
               alt={location.name}
               fill
               sizes="(min-width: 1024px) 50vw, 100vw"
-              className="object-cover"
+              className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
             />
           </div>
         ) : null}
@@ -134,20 +134,22 @@ export function LocationCard({ location, variant = 'grid' }: LocationCardProps):
   // grid
   return (
     <Card
+      data-card="hover"
       className={cn(
         'group flex h-full flex-col overflow-hidden hover:shadow-md',
         'focus-within:ring-2 focus-within:ring-brand-500',
       )}
     >
       {location.primaryPhoto ? (
-        <div className="relative aspect-[4/3] w-full bg-slate-100">
+        <div className="relative aspect-[4/3] w-full overflow-hidden bg-slate-100">
           <Image
             src={location.primaryPhoto}
             alt={location.name}
             fill
             sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-            className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+            className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.05]"
           />
+          <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-slate-900/40 to-transparent" aria-hidden />
         </div>
       ) : null}
 

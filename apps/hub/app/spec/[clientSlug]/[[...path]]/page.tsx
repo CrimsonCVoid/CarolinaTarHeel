@@ -26,6 +26,9 @@ interface SpecClient {
   brandName: string;
   cityState: string;
   ownerEmail?: string;
+  /** CSS class applied to the wrapping <div> so per-client palette overrides
+   *  in globals.css can re-skin Tailwind brand-* tokens. */
+  themeClass?: string;
 }
 
 const SPEC_CLIENTS: Record<string, SpecClient> = {
@@ -34,6 +37,7 @@ const SPEC_CLIENTS: Record<string, SpecClient> = {
     brandName: 'Southern Peak Brewery',
     cityState: 'Apex, NC',
     ownerEmail: 'info@southernpeakbrewery.com',
+    themeClass: 'spec-southern-peak',
   },
 };
 
@@ -93,10 +97,10 @@ export default async function SpecPreviewPage({ params }: RouteProps) {
   const prefix = `/spec/${clientSlug}`;
 
   return (
-    <>
+    <div className={client.themeClass ?? ''}>
       <SpecBanner brandName={client.brandName} cityState={client.cityState} />
       <LinkPrefixer prefix={prefix} />
       <div className="pt-10">{rendered}</div>
-    </>
+    </div>
   );
 }

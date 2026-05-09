@@ -125,4 +125,89 @@
     0%   { background-position: -200% 0; }
     100% { background-position: 200% 0; }
   }
+
+  /* ==================================================================
+   * Spec preview — Southern Peak Brewery skin
+   * Scoped CSS-variable overrides so the spec preview reads as Southern
+   * Peak's green wordmark identity, not Tar Heel Web Co.'s blue. Shared
+   * v2 components reference --color-brand-* via Tailwind v4's @theme;
+   * redefining those vars on a wrapper element re-skins everything
+   * inside without touching component code.
+   * ================================================================== */
+  .spec-southern-peak {
+    --color-brand-50:  #f0f7ee;
+    --color-brand-100: #d8ebd2;
+    --color-brand-200: #b1d4a3;
+    --color-brand-300: #82b870;
+    --color-brand-400: #589b48;
+    --color-brand-500: #3a7a3a;
+    --color-brand-600: #2d6230;
+    --color-brand-700: #244e26;
+    --color-brand-800: #1d3d1f;
+    --color-brand-900: #172f19;
+    --color-brand-950: #0d1c0e;
+  }
+
+  /* Page-load section stagger — first few sections fade up with offset.
+   * Pure CSS, no IntersectionObserver, no client JS. Below-the-fold
+   * sections render statically (you'll see them as you scroll). */
+  @keyframes thw-section-rise {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .spec-southern-peak section,
+  .spec-southern-peak main > div > section {
+    animation: thw-section-rise 520ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  }
+  .spec-southern-peak section:nth-of-type(1) { animation-delay: 0ms; }
+  .spec-southern-peak section:nth-of-type(2) { animation-delay: 80ms; }
+  .spec-southern-peak section:nth-of-type(3) { animation-delay: 160ms; }
+  .spec-southern-peak section:nth-of-type(4) { animation-delay: 220ms; }
+  .spec-southern-peak section:nth-of-type(5) { animation-delay: 280ms; }
+  .spec-southern-peak section:nth-of-type(6) { animation-delay: 340ms; }
+  .spec-southern-peak section:nth-of-type(7) { animation-delay: 400ms; }
+  .spec-southern-peak section:nth-of-type(n+8) { animation-delay: 460ms; }
+
+  /* Scroll-driven reveal on browsers that support it (Chrome 115+, Safari 18+).
+   * Sections fade up as their top crosses 60% into the viewport. Replaces the
+   * page-load stagger when supported, so below-the-fold sections also reveal. */
+  @supports (animation-timeline: view()) {
+    .spec-southern-peak section {
+      animation: thw-section-rise linear both;
+      animation-timeline: view();
+      animation-range: entry 5% cover 30%;
+    }
+    .spec-southern-peak section:nth-of-type(n) { animation-delay: 0ms; }
+  }
+
+  /* Hero one-shot zoom on mount. Ten-second slow-pull from 1.04 to 1.0
+   * — a Premium-tier ken-burns moment per MOTION.md §5. One-time only,
+   * no loop, disabled by prefers-reduced-motion via the global reset. */
+  @keyframes thw-hero-zoom {
+    from { transform: scale(1.05); }
+    to   { transform: scale(1); }
+  }
+  .spec-southern-peak section img[sizes="100vw"] {
+    animation: thw-hero-zoom 12s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* Make hero photography the actual subject — the default opacity-40
+   * applied by HeroCentered washes out a strong photo. Inside spec
+   * preview, the gradient overlay alone handles text contrast. */
+  .spec-southern-peak section img[sizes="100vw"] {
+    opacity: 0.78;
+  }
+
+  /* Card hover lift used by location/beer/menu cards inside spec preview.
+   * <200ms hover transition per MOTION.md §5 client tier. */
+  .spec-southern-peak [data-card="hover"] {
+    transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 180ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  @media (hover: hover) and (min-width: 1024px) {
+    .spec-southern-peak [data-card="hover"]:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px -12px rgba(15, 23, 42, 0.18);
+    }
+  }
 }

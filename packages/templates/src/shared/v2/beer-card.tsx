@@ -19,13 +19,28 @@ function titleCase(key: string): string {
     .join(' ');
 }
 
+/** Map beer style → gradient that visually keys to the beer's color in the
+ *  glass. Used as a hero strip when no photo is available, so a tap list
+ *  reads like a bar's chalkboard rather than a wall of text. */
+function styleGradient(style: string): string {
+  const s = style.toLowerCase();
+  if (/baltic porter|porter|stout/.test(s)) return 'linear-gradient(135deg, #4a2410, #1a0e08)';
+  if (/hazy|new england|neipa/.test(s)) return 'linear-gradient(135deg, #f3b450, #c47a16)';
+  if (/ipa|pale ale/.test(s)) return 'linear-gradient(135deg, #7ea03a, #3a5215)';
+  if (/wheat|hefe|witbier/.test(s)) return 'linear-gradient(135deg, #f0d27d, #b08a26)';
+  if (/amber|red|copper/.test(s)) return 'linear-gradient(135deg, #d18a3a, #7a3f0a)';
+  if (/pilsner|lager|kolsch|helles/.test(s)) return 'linear-gradient(135deg, #f5dc73, #c4972a)';
+  if (/sour|gose|berliner/.test(s)) return 'linear-gradient(135deg, #f2c2d6, #b6537a)';
+  return 'linear-gradient(135deg, #94a3b8, #475569)';
+}
+
 export function BeerCard({ beer }: BeerCardProps): JSX.Element {
   const stats: string[] = [];
   if (typeof beer.abv === 'number') stats.push(`${beer.abv.toFixed(1)}% ABV`);
   if (typeof beer.ibu === 'number') stats.push(`${Math.round(beer.ibu)} IBU`);
 
   return (
-    <Card className="flex h-full flex-col overflow-hidden hover:shadow-md">
+    <Card data-card="hover" className="flex h-full flex-col overflow-hidden hover:shadow-md">
       {beer.image ? (
         <div className="relative aspect-[4/3] w-full bg-slate-100">
           <Image
@@ -36,7 +51,17 @@ export function BeerCard({ beer }: BeerCardProps): JSX.Element {
             className="object-cover"
           />
         </div>
-      ) : null}
+      ) : (
+        <div
+          aria-hidden
+          className="relative h-24 w-full overflow-hidden"
+          style={{ backgroundImage: styleGradient(beer.style) }}
+        >
+          <span className="absolute inset-x-4 bottom-2 truncate font-display text-sm font-semibold uppercase tracking-[0.18em] text-white/90">
+            {beer.style}
+          </span>
+        </div>
+      )}
 
       <CardContent className="flex flex-1 flex-col gap-3 p-6">
         <div className="space-y-1">
