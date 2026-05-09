@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Badge, Card, CardContent, Container } from '@tarheel/ui';
 import { createServerClient } from '@/lib/supabase/server';
+import { SaplingIllustration } from '@/components/illustrations';
 
 export const metadata = { title: 'Dashboard' };
 
@@ -47,9 +48,14 @@ export default async function Dashboard() {
         </ul>
       ) : (
         <Card className="mt-8">
-          <CardContent className="p-12 text-center">
-            <p className="text-base text-slate-600">No sites yet.</p>
-            <p className="mt-1 text-sm text-slate-500">Your operator will provision one.</p>
+          <CardContent className="flex flex-col items-center p-12 text-center">
+            <SaplingIllustration className="mb-6 h-20 w-20" />
+            <h2 className="font-display text-xl font-semibold tracking-tight text-slate-900">
+              Let&apos;s plant your first site.
+            </h2>
+            <p className="mt-2 max-w-sm text-sm text-slate-600">
+              Your operator will provision one — or head to admin if that&apos;s you.
+            </p>
           </CardContent>
         </Card>
       )}

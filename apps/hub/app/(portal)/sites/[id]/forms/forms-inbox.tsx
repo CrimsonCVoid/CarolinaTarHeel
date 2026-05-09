@@ -4,6 +4,7 @@ import { useState, useTransition } from 'react';
 import Link from 'next/link';
 import { Badge, Button } from '@tarheel/ui';
 import { setStatus, exportCsv } from './actions';
+import { EmptyMailboxIllustration } from '@/components/illustrations';
 
 interface Submission {
   id: string;
@@ -82,7 +83,13 @@ export function FormsInbox({
       </div>
 
       {items.length === 0 ? (
-        <p className="px-6 py-12 text-center text-sm text-slate-500">No submissions yet.</p>
+        <div className="flex flex-col items-center px-6 py-16 text-center">
+          <EmptyMailboxIllustration className="mb-5 h-16 w-16" />
+          <p className="text-base font-medium text-slate-900">No submissions yet.</p>
+          <p className="mt-1 text-xs text-slate-500">
+            When someone fills out your contact form, you&apos;ll see them here.
+          </p>
+        </div>
       ) : (
         <ul className="divide-y divide-slate-200">
           {items.map((s) => {

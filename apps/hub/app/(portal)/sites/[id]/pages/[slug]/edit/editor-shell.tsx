@@ -13,6 +13,7 @@ import {
 } from '@tarheel/editor';
 import type { FieldMeta } from '@tarheel/templates';
 import { saveDraft, publishPage, restoreVersion, uploadMedia } from './actions';
+import { PublishCelebration, type PublishStage } from '@/components/publish-celebration';
 
 interface Props {
   siteId: string;
@@ -43,6 +44,7 @@ export function EditorShell({
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const [status, setStatus] = useState<AutosaveStatus>('idle');
+  const [publishStage, setPublishStage] = useState<PublishStage>('idle');
 
   const handleAutosave = useCallback(
     (next: Record<string, unknown>) => {
@@ -71,15 +73,28 @@ export function EditorShell({
 
   const handlePublish = () => {
     setStatus('saving');
+    setError(null);
+    setPublishStage('saving');
     startTransition(async () => {
       try {
-        setError(null);
-        await publishPage(siteId, slug);
+        // Stage progression is mostly cosmetic — publishPage runs in one
+        // server action, but we tick through 'updating' and 'verifying'
+        // so the user sees the live update + revalidation steps land in
+        // sequence. Total wall time ~1-2s for a normal publish.
+        const promise = publishPage(siteId, slug);
+        const t1 = setTimeout(() => setPublishStage('updating'), 300);
+        const t2 = setTimeout(() => setPublishStage('verifying'), 900);
+        await promise;
+        clearTimeout(t1);
+        clearTimeout(t2);
         setSavedAt(new Date());
         setStatus('saved');
+        setPublishStage('done');
+        setTimeout(() => setPublishStage('idle'), 4500);
       } catch (e) {
         setError(e instanceof Error ? e.message : 'Publish failed');
         setStatus('error');
+        setPublishStage('error');
       }
     });
   };
@@ -140,6 +155,12 @@ export function EditorShell({
           <PreviewIframe src={previewUrl} refreshKey={refreshKey} />
         </div>
       </div>
+      <PublishCelebration
+        stage={publishStage}
+        liveUrl={_siteDomain}
+        errorMessage={error ?? undefined}
+        onDismiss={() => setPublishStage('idle')}
+      />
     </EditorProvider>
   );
 }

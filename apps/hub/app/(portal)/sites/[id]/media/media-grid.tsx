@@ -4,6 +4,7 @@ import { useRef, useState, useTransition } from 'react';
 import { Button, Card, CardContent, Input, Label, Textarea } from '@tarheel/ui';
 import { Trash2, Upload } from 'lucide-react';
 import { uploadMediaItems, updateAltText, deleteMedia } from './actions';
+import { EmptyFrameIllustration } from '@/components/illustrations';
 
 interface MediaItem {
   id: string;
@@ -71,7 +72,11 @@ export function MediaGrid({ siteId, initial }: { siteId: string; initial: MediaI
         className={`mt-6 rounded-2xl border-2 border-dashed p-2 ${drag ? 'border-brand-400 bg-brand-50' : 'border-slate-200'}`}
       >
         {items.length === 0 ? (
-          <p className="py-12 text-center text-sm text-slate-500">Drop images here or click Upload.</p>
+          <div className="flex flex-col items-center px-6 py-16 text-center">
+            <EmptyFrameIllustration className="mb-5 h-16 w-16" />
+            <p className="text-base font-medium text-slate-900">Drag a photo here, or click Upload.</p>
+            <p className="mt-1 text-xs text-slate-500">JPG / PNG / WebP. Alt text required before publish.</p>
+          </div>
         ) : (
           <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
             {items.map((m) => (

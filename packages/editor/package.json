@@ -17,6 +17,7 @@
     "@hookform/resolvers": "^3.9.1",
     "@tarheel/templates": "workspace:*",
     "@tarheel/ui": "workspace:*",
+    "framer-motion": "^11.11.17",
     "lucide-react": "^0.460.0",
     "react-hook-form": "^7.53.2",
     "zod": "^3.23.8"

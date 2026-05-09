@@ -90,4 +90,15 @@
     from { stroke-dashoffset: 24; }
     to   { stroke-dashoffset: 0; }
   }
+  /* SVG line-drawing reveal — used by illustrations (MOTION.md §6.3). */
+  @keyframes thw-draw {
+    to { stroke-dashoffset: 0; }
+  }
+  /* Mailbox flag — once-per-8s rise on the empty form-submissions state.
+     Bounded ambient motion permitted by §4.6. */
+  @keyframes thw-flag-wave {
+    0%, 90%, 100% { transform: rotate(0deg); }
+    93% { transform: rotate(-8deg); }
+    96% { transform: rotate(0deg); }
+  }
 }

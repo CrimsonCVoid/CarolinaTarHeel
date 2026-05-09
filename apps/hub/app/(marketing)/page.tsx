@@ -1,35 +1,38 @@
 import Link from 'next/link';
 import { Container } from '@tarheel/ui';
 import { RevealSection } from '@/components/reveal-section';
+import { HeroCanvas } from '@/components/hero-canvas';
+import { PerformanceComparison } from '@/components/performance-comparison';
 
 export default function MarketingHome() {
   return (
     <>
-      <section className="bg-white">
-        <Container className="py-24 md:py-32">
+      <section className="relative isolate overflow-hidden bg-slate-900 text-white">
+        <HeroCanvas />
+        <Container className="relative z-10 py-24 md:py-32">
           <div className="mx-auto max-w-3xl text-center">
-            <p className="text-sm font-semibold uppercase tracking-wide text-brand-700">
+            <p className="text-sm font-semibold uppercase tracking-wide text-brand-200 motion-safe:animate-[thw-rise_var(--dur-medium)_var(--ease-out-expo)]">
               Built in Carolina · For Carolina
             </p>
-            <h1 className="mt-4 font-display text-5xl font-semibold tracking-tight text-slate-900 md:text-6xl">
+            <h1 className="mt-4 font-display text-5xl font-semibold tracking-tight text-white md:text-6xl motion-safe:animate-[thw-rise-large_var(--dur-slow)_var(--ease-out-expo)]">
               Fast websites, simple pricing,
               <br />
-              <span className="text-brand-700">no platform fees</span>.
+              <span className="text-brand-300">no platform fees</span>.
             </h1>
-            <p className="mt-6 text-lg leading-relaxed text-slate-700">
+            <p className="mt-6 text-lg leading-relaxed text-slate-200 motion-safe:animate-[thw-rise_var(--dur-medium)_var(--ease-out-expo)_120ms_both]">
               Productized website builds for small NC businesses — restaurants, med spas, law firms, home
               services. Half the price of an agency, ten times faster than Wix.
             </p>
-            <div className="mt-10 flex flex-wrap justify-center gap-4">
+            <div className="mt-10 flex flex-wrap justify-center gap-4 motion-safe:animate-[thw-rise_var(--dur-medium)_var(--ease-out-expo)_240ms_both]">
               <Link
                 href="/contact"
-                className="inline-flex h-12 items-center rounded-2xl bg-brand-600 px-6 text-base font-medium text-white hover:bg-brand-700"
+                className="inline-flex h-12 items-center rounded-2xl bg-white px-6 text-base font-medium text-slate-900 transition-colors duration-[var(--dur-fast)] hover:bg-slate-100 active:scale-[0.97] motion-reduce:active:scale-100"
               >
                 Book a discovery call
               </Link>
               <Link
                 href="/pricing"
-                className="inline-flex h-12 items-center rounded-2xl border border-slate-300 px-6 text-base font-medium text-slate-900 hover:bg-slate-50"
+                className="inline-flex h-12 items-center rounded-2xl border border-white/40 px-6 text-base font-medium text-white transition-colors duration-[var(--dur-fast)] hover:bg-white/10 active:scale-[0.97] motion-reduce:active:scale-100"
               >
                 See pricing
               </Link>
@@ -67,6 +70,20 @@ export default function MarketingHome() {
       </RevealSection>
 
       <RevealSection className="bg-white">
+        <Container className="py-20 md:py-24">
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 className="font-display text-3xl font-semibold tracking-tight text-slate-900 md:text-4xl">
+              Watch a typical SMB site load. Then watch ours.
+            </h2>
+            <p className="mt-4 text-lg leading-relaxed text-slate-700">
+              Real numbers from real audits. Both panels run in real time when you scroll here.
+            </p>
+          </div>
+          <PerformanceComparison />
+        </Container>
+      </RevealSection>
+
+      <RevealSection className="bg-slate-50">
         <Container className="py-20 md:py-24">
           <div className="grid gap-12 lg:grid-cols-2">
             <div>
