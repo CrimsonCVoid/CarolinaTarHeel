@@ -6,6 +6,7 @@ import { requireOperator } from '@/lib/auth';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { createSiteProject } from '@/lib/vercel';
 import { env } from '@/lib/env';
+import { track, groupIdentify } from '@/lib/analytics-server';
 
 const Input = z.object({
   orgName: z.string().min(1).max(120),
@@ -100,6 +101,27 @@ export async function runOnboarding(raw: unknown) {
     site_id: site.id,
     action: 'site.provisioned',
     metadata: { projectId, domain: input.domain, plan: input.plan },
+  });
+
+  await track('site_provisioned', {
+    distinctId: ownerId,
+    properties: {
+      org_name: input.orgName,
+      domain: input.domain,
+      template: input.templateId,
+      plan: input.plan,
+      vercel_project_id: projectId,
+    },
+    groups: { organization: org.id, site: site.id },
+  });
+  await groupIdentify('organization', org.id, {
+    name: input.orgName,
+    plan: input.plan,
+    created_at: new Date().toISOString(),
+  });
+  await groupIdentify('site', site.id, {
+    domain: input.domain,
+    template: input.templateId,
   });
 
   // Magic-link invite for the client

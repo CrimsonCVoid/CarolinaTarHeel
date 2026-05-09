@@ -6,6 +6,7 @@ import { getTemplate } from '@tarheel/templates';
 import { createServerClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { requireSiteAccess } from '@/lib/auth';
+import { track } from '@/lib/analytics-server';
 
 const Json = z.unknown();
 
@@ -94,6 +95,12 @@ export async function publishPage(siteId: string, slug: string) {
 
   revalidatePath(`/sites/${siteId}`);
   revalidatePath(`/sites/${siteId}/pages/${encodeURIComponent(slug)}/edit`);
+
+  await track('page_published', {
+    distinctId: user.id,
+    properties: { slug, template: site.template_id, domain: site.domain },
+    groups: { organization: site.org_id, site: siteId },
+  });
 }
 
 /**

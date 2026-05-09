@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { Inter, Fraunces } from 'next/font/google';
 import './globals.css';
 import { TopProgressBar } from '@/components/top-progress-bar';
+import { AnalyticsProvider } from '@/components/analytics-provider';
 
 const sans = Inter({ subsets: ['latin'], variable: '--font-sans-runtime', display: 'swap' });
 const display = Fraunces({ subsets: ['latin'], variable: '--font-display-runtime', display: 'swap' });
@@ -18,13 +19,21 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  // Layout stays sync so the marketing routes can statically prerender.
+  // AnalyticsProvider fetches the signed-in user client-side on mount —
+  // that way we don't need cookies() in this layer.
   return (
     <html lang="en" className={`${sans.variable} ${display.variable}`}>
       <body className="font-sans">
         <Suspense fallback={null}>
           <TopProgressBar />
         </Suspense>
-        {children}
+        <AnalyticsProvider
+          posthogKey={process.env.NEXT_PUBLIC_POSTHOG_KEY}
+          posthogHost={process.env.NEXT_PUBLIC_POSTHOG_HOST}
+        >
+          {children}
+        </AnalyticsProvider>
       </body>
     </html>
   );

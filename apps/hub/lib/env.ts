@@ -28,6 +28,10 @@ const schema = z.object({
   TURNSTILE_SECRET_KEY: z.string().optional(),
 
   NEXT_PUBLIC_SENTRY_DSN: z.string().optional(),
+
+  NEXT_PUBLIC_POSTHOG_KEY: z.string().optional(),
+  NEXT_PUBLIC_POSTHOG_HOST: z.string().optional(),
+  POSTHOG_SERVER_KEY: z.string().optional(),
 });
 
 export const env = schema.parse({
@@ -53,4 +57,7 @@ export const env = schema.parse({
   NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
   TURNSTILE_SECRET_KEY: process.env.TURNSTILE_SECRET_KEY,
   NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
+  NEXT_PUBLIC_POSTHOG_KEY: process.env.NEXT_PUBLIC_POSTHOG_KEY,
+  NEXT_PUBLIC_POSTHOG_HOST: process.env.NEXT_PUBLIC_POSTHOG_HOST,
+  POSTHOG_SERVER_KEY: process.env.POSTHOG_SERVER_KEY,
 });
