@@ -107,7 +107,7 @@ export function EditorShell({
             </div>
           </details>
         </div>
-        <div className="lg:sticky lg:top-6 lg:self-start">
+        <div className="lg:sticky lg:top-6 lg:h-[calc(100vh-3rem)] lg:self-start">
           <PreviewIframe src={previewUrl} refreshKey={refreshKey} />
         </div>
       </div>
