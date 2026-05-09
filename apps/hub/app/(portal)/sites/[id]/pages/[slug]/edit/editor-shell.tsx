@@ -80,9 +80,14 @@ export function EditorShell({
 
   return (
     <EditorProvider value={{ siteId, upload }}>
-      <div className="grid gap-8 lg:grid-cols-[minmax(0,420px)_minmax(0,1fr)]">
-        <div className="space-y-6">
-          <div className="flex items-center justify-between gap-4">
+      {/*
+        Split-pane app shell. Outer container is exactly viewport-height
+        minus the (portal) layout's 4rem header and the site-tabs subnav
+        (~6.5rem on desktop). Each pane scrolls independently.
+      */}
+      <div className="grid h-[calc(100vh-10.5rem)] grid-cols-1 lg:grid-cols-[minmax(0,420px)_minmax(0,1fr)]">
+        <div className="flex min-h-0 flex-col overflow-y-auto border-slate-200 px-6 py-6 lg:border-r">
+          <div className="mb-6 flex items-center justify-between gap-4">
             <div className="min-w-0">
               <h2 className="truncate font-display text-xl font-semibold tracking-tight text-slate-900">
                 {pageTitle}
@@ -97,15 +102,10 @@ export function EditorShell({
             </div>
           </div>
           {error ? (
-            <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-800">{error}</div>
+            <div className="mb-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-800">{error}</div>
           ) : null}
-          <FormFromSchema
-            meta={editorMeta}
-            value={draft}
-            onChange={setDraft}
-            onAutosave={handleAutosave}
-          />
-          <details className="rounded-2xl border border-slate-200 bg-white">
+          <FormFromSchema meta={editorMeta} value={draft} onChange={setDraft} onAutosave={handleAutosave} />
+          <details className="mt-6 rounded-2xl border border-slate-200 bg-white">
             <summary className="cursor-pointer px-5 py-4 text-sm font-semibold text-slate-900">
               Version history
             </summary>
@@ -114,7 +114,7 @@ export function EditorShell({
             </div>
           </details>
         </div>
-        <div className="lg:sticky lg:top-6 lg:self-start">
+        <div className="min-h-0 bg-slate-100 p-4">
           <PreviewIframe src={previewUrl} refreshKey={refreshKey} />
         </div>
       </div>

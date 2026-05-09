@@ -1,5 +1,4 @@
 import { notFound } from 'next/navigation';
-import { Container } from '@tarheel/ui';
 import { getTemplate } from '@tarheel/templates';
 import { requireSiteAccess } from '@/lib/auth';
 import { createServerClient } from '@/lib/supabase/server';
@@ -40,18 +39,16 @@ export default async function EditPage({
   const previewUrl = `/preview/${site.id}${previewPath}?token=${previewToken}`;
 
   return (
-    <Container className="py-8">
-      <EditorShell
-        siteId={id}
-        siteDomain={site.domain}
-        slug={slug}
-        pageTitle={pageDef.title}
-        templateId={site.template_id}
-        editorMeta={pageDef.editorMeta}
-        initialDraft={(page?.draft_content as Record<string, unknown>) ?? (pageDef.defaultContent as Record<string, unknown>)}
-        previewUrl={previewUrl}
-        versions={versions ?? []}
-      />
-    </Container>
+    <EditorShell
+      siteId={id}
+      siteDomain={site.domain}
+      slug={slug}
+      pageTitle={pageDef.title}
+      templateId={site.template_id}
+      editorMeta={pageDef.editorMeta}
+      initialDraft={(page?.draft_content as Record<string, unknown>) ?? (pageDef.defaultContent as Record<string, unknown>)}
+      previewUrl={previewUrl}
+      versions={versions ?? []}
+    />
   );
 }
