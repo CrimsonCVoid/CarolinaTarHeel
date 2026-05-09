@@ -12,7 +12,7 @@ import {
   type PageVersion,
 } from '@tarheel/editor';
 import type { FieldMeta } from '@tarheel/templates';
-import { saveDraft, publishPage, restoreVersion, uploadMedia } from './actions';
+import { saveDraft, publishPage, restoreVersion, uploadMedia, getVersionContent } from './actions';
 import { PublishCelebration, type PublishStage } from '@/components/publish-celebration';
 
 interface Props {
@@ -45,6 +45,7 @@ export function EditorShell({
   const [isPending, startTransition] = useTransition();
   const [status, setStatus] = useState<AutosaveStatus>('idle');
   const [publishStage, setPublishStage] = useState<PublishStage>('idle');
+  const [previewingVersionId, setPreviewingVersionId] = useState<string | null>(null);
 
   /*
    * Live preview channel. Holds a ref to the iframe element and a flag
@@ -106,6 +107,9 @@ export function EditorShell({
     setDraft(next);
     lastDraftRef.current = next;
     setStatus((s) => (s === 'saving' ? s : 'editing'));
+    // Typing while previewing a snapshot exits the snapshot — the live
+    // draft takes over the iframe immediately.
+    setPreviewingVersionId(null);
     if (iframeReadyRef.current) postPreview(next);
   }, []);
 
@@ -140,6 +144,31 @@ export function EditorShell({
   const handleRestore = async (versionId: string) => {
     await restoreVersion(siteId, slug, versionId);
     window.location.reload();
+  };
+
+  // Show a snapshot in the iframe without committing it as the current
+  // draft. Pushes the version content over the same postMessage channel
+  // the live preview uses. User can then either Restore (to commit) or
+  // Exit preview (to revert the iframe to the in-memory draft).
+  const handlePreviewVersion = async (versionId: string) => {
+    if (previewingVersionId === versionId) {
+      // Toggle off — go back to current draft
+      setPreviewingVersionId(null);
+      postPreview(lastDraftRef.current);
+      return;
+    }
+    try {
+      const content = (await getVersionContent(siteId, versionId)) as Record<string, unknown>;
+      setPreviewingVersionId(versionId);
+      postPreview(content);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Failed to load version');
+    }
+  };
+
+  const exitVersionPreview = () => {
+    setPreviewingVersionId(null);
+    postPreview(lastDraftRef.current);
   };
 
   const upload = useCallback(
@@ -186,12 +215,33 @@ export function EditorShell({
               Version history
             </summary>
             <div className="border-t border-slate-200 px-5 py-4">
-              <VersionList versions={versions} onRestore={handleRestore} />
+              <VersionList
+                versions={versions}
+                onRestore={handleRestore}
+                onPreview={handlePreviewVersion}
+                previewingId={previewingVersionId}
+              />
             </div>
           </details>
         </div>
-        <div className="min-h-0 bg-slate-100 p-4">
-          <PreviewIframe src={previewUrl} refreshKey={refreshKey} />
+        <div className="relative flex min-h-0 flex-col bg-slate-100 p-4">
+          {previewingVersionId ? (
+            <div className="mb-3 flex items-center justify-between gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-2 text-sm text-amber-900">
+              <span>
+                <strong>Previewing a snapshot.</strong> Your draft is unchanged.
+              </span>
+              <button
+                type="button"
+                onClick={exitVersionPreview}
+                className="text-xs font-medium text-amber-900 underline-offset-2 hover:underline"
+              >
+                Exit preview
+              </button>
+            </div>
+          ) : null}
+          <div className="min-h-0 flex-1">
+            <PreviewIframe src={previewUrl} refreshKey={refreshKey} />
+          </div>
         </div>
       </div>
       <PublishCelebration

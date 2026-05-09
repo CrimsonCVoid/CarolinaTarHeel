@@ -96,6 +96,30 @@ export async function publishPage(siteId: string, slug: string) {
   revalidatePath(`/sites/${siteId}/pages/${encodeURIComponent(slug)}/edit`);
 }
 
+/**
+ * Fetches a single version's content. Used by the Preview button on the
+ * version-history list — the editor pushes this content into the iframe
+ * so the user can see the snapshot without overwriting their current
+ * draft. Auth gate is the same as restoreVersion (read access on the
+ * owning site).
+ */
+export async function getVersionContent(siteId: string, versionId: string): Promise<unknown> {
+  await requireSiteAccess(siteId);
+  const supabase = await createServerClient();
+  // Verify the version belongs to a page on this site (defense in depth —
+  // RLS already enforces this via the membership policies in 0001_initial).
+  const { data: ver } = await supabase
+    .from('page_versions')
+    .select('content, page_id, pages!inner(site_id)')
+    .eq('id', versionId)
+    .single();
+  if (!ver) throw new Error('Version not found');
+  const pageRel = ver.pages as { site_id: string } | { site_id: string }[] | null;
+  const owningSiteId = Array.isArray(pageRel) ? pageRel[0]?.site_id : pageRel?.site_id;
+  if (owningSiteId !== siteId) throw new Error('Version does not belong to this site');
+  return ver.content;
+}
+
 export async function restoreVersion(siteId: string, slug: string, versionId: string) {
   await requireSiteAccess(siteId);
   const supabase = await createServerClient();
