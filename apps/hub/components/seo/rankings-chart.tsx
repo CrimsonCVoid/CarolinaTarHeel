@@ -20,11 +20,25 @@ export function RankingsChart() {
     <div className="seo-card rounded-2xl border border-slate-200 bg-white p-6">
       <h3 className="font-display text-lg font-semibold tracking-tight text-slate-900">Search rankings</h3>
       <p className="mt-1 text-xs text-slate-500">Weeks since launch vs. SERP position. Lower is better.</p>
-      <div className="mt-4 h-56 w-full">
+      <div className="mt-4 h-72 w-full">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={SAMPLE} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
+          <LineChart data={SAMPLE} margin={{ top: 8, right: 8, left: 0, bottom: 28 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="rgb(226 232 240)" vertical={false} />
-            <XAxis dataKey="week" stroke="rgb(100 116 139)" fontSize={11} tickLine={false} axisLine={false} />
+            <XAxis
+              dataKey="week"
+              stroke="rgb(100 116 139)"
+              fontSize={11}
+              tickLine={false}
+              axisLine={false}
+              tickFormatter={(v) => `Week ${v}`}
+              label={{
+                value: 'Weeks since launch',
+                position: 'insideBottom',
+                offset: -16,
+                fontSize: 11,
+                fill: 'rgb(100 116 139)',
+              }}
+            />
             <YAxis
               reversed
               domain={[1, 50]}
@@ -33,13 +47,32 @@ export function RankingsChart() {
               fontSize={11}
               tickLine={false}
               axisLine={false}
-              width={28}
+              width={32}
             />
-            <ReferenceLine y={10} stroke="var(--color-success-700)" strokeDasharray="3 3" label={{ value: 'Page 1', position: 'right', fontSize: 10, fill: 'rgb(21 128 61)' }} />
+            <ReferenceLine
+              y={10}
+              stroke="var(--color-success-700)"
+              strokeDasharray="3 3"
+              label={{ value: 'Page 1', position: 'right', fontSize: 10, fill: 'rgb(21 128 61)' }}
+            />
+            {/*
+             * Tooltip is itemized: one row per <Line>, no aggregation. Defaults
+             * to that anyway, but we override the formatter so each entry reads
+             * "Position #N" (rather than just a bare number) and the header
+             * reads "Week N".
+             */}
             <Tooltip
-              contentStyle={{ background: 'white', border: '1px solid rgb(226 232 240)', borderRadius: 8, fontSize: 12 }}
+              cursor={{ stroke: 'rgb(148 163 184)', strokeDasharray: '3 3' }}
+              labelFormatter={(week) => `Week ${week}`}
+              formatter={(value: number, name) => [`Position #${value}`, name as string]}
+              contentStyle={{
+                background: 'white',
+                border: '1px solid rgb(226 232 240)',
+                borderRadius: 8,
+                fontSize: 12,
+              }}
             />
-            <Legend wrapperStyle={{ fontSize: 11 }} iconType="circle" />
+            <Legend wrapperStyle={{ fontSize: 11, paddingTop: 16 }} iconType="circle" verticalAlign="bottom" />
             {KEYWORDS.map((k, i) => (
               <Line
                 key={k.key}
@@ -49,6 +82,7 @@ export function RankingsChart() {
                 stroke={k.color}
                 strokeWidth={2}
                 dot={false}
+                activeDot={{ r: 4 }}
                 animationDuration={1600}
                 animationBegin={i * 200}
               />

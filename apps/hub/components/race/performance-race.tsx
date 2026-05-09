@@ -73,10 +73,6 @@ export function PerformanceRace() {
   }, [raceKey]);
 
   const replay = () => setRaceKey((k) => k + 1);
-  const skip = () => {
-    setTypical(TYPICAL_TERMINAL);
-    setOurs(OURS_TERMINAL);
-  };
 
   return (
     <section ref={sectionRef} className="bg-slate-900 py-20 text-white md:py-28">
@@ -111,20 +107,13 @@ export function PerformanceRace() {
           />
         </div>
 
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+        <div className="mt-8 flex justify-center">
           <button
             type="button"
             onClick={replay}
             className="inline-flex items-center gap-2 rounded-2xl bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors duration-[var(--dur-fast)] hover:bg-white/15 active:scale-[0.97] motion-reduce:active:scale-100"
           >
             <RotateCcw className="h-4 w-4" /> Replay race
-          </button>
-          <button
-            type="button"
-            onClick={skip}
-            className="text-sm text-slate-300 underline-offset-2 hover:text-white hover:underline"
-          >
-            Skip — show results
           </button>
         </div>
       </div>
