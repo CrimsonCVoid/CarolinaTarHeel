@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { renderTemplate, type SiteSettings } from '@tarheel/templates';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { verifyPreviewToken } from '@/lib/preview-token';
+import { RefreshListener } from './refresh-listener';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -51,10 +52,15 @@ export default async function PreviewPage({ params, searchParams }: Props) {
   if (!pageRes.data) notFound();
 
   const settings = (settingsRes.data ?? DEFAULT_SETTINGS) as SiteSettings;
-  return renderTemplate(
-    site.template_id as string,
-    pageRes.data.slug as string,
-    pageRes.data.draft_content,
-    settings,
+  return (
+    <>
+      <RefreshListener />
+      {renderTemplate(
+        site.template_id as string,
+        pageRes.data.slug as string,
+        pageRes.data.draft_content,
+        settings,
+      )}
+    </>
   );
 }
