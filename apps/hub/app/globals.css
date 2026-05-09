@@ -168,6 +168,13 @@
     color: #1a1a18;
   }
 
+  /* Bump default body-text contrast inside spec preview. The agency
+   * defaults (slate-500, slate-600) are calibrated for stark white and
+   * read washed out on a warm cream canvas. */
+  .spec-southern-peak .text-slate-500 { color: #4a5b3e; }
+  .spec-southern-peak .text-slate-600 { color: #2c3a26; }
+  .spec-southern-peak .text-slate-700 { color: #1c2818; }
+
   /* Film grain texture — fixed position, behind content, very low opacity.
    * Inline SVG turbulence noise. No JS, ~0.5KB. */
   .spec-southern-peak::before {
@@ -187,11 +194,12 @@
   }
 
   /* Section recoloring — agency template uses bg-white / bg-slate-50 /
-   * bg-slate-900. Recolor those to cream / paper / deep-forest so the
-   * page reads as a brewery, not a generic restaurant. */
+   * bg-slate-900. Inside spec preview we want a warm brewery feel WITHOUT
+   * losing the visual rhythm those background swaps create. So we tint
+   * — not erase — each. */
   .spec-southern-peak section.bg-white,
   .spec-southern-peak section[class*="bg-white"] {
-    background-color: transparent;
+    background-color: var(--sp-foam);   /* near-white warm */
   }
   .spec-southern-peak section.bg-slate-50,
   .spec-southern-peak section[class*="bg-slate-50"] {
@@ -444,6 +452,216 @@
   /* Final-CTA panel gets the dramatic dark-on-cream pop. */
   .spec-southern-peak section[class*="bg-slate-900"] [class*="font-display"] {
     color: var(--sp-cream);
+  }
+
+  /* ==================================================================
+   * /food page — magazine-style menu layout
+   * Targets `section[id^="cat-"]` (food.tsx scope-limits each menu category
+   * with id="cat-{slug}"). Two-column item grid on desktop, oversized
+   * category headers with a copper accent rule, copper display-type prices.
+   * ================================================================== */
+  .spec-southern-peak section[id^="cat-"] header {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+  .spec-southern-peak section[id^="cat-"] header::before {
+    content: '';
+    display: block;
+    width: 64px;
+    height: 3px;
+    background: var(--sp-copper);
+    margin-bottom: 1.25rem;
+  }
+  .spec-southern-peak section[id^="cat-"] h2 {
+    font-size: clamp(2.25rem, 5vw, 3.5rem);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: -0.015em;
+    color: var(--sp-charcoal);
+  }
+
+  /* Stack two-up on desktop. Use display-driven grid override on the
+   * existing <ul> wrapper. */
+  .spec-southern-peak section[id^="cat-"] > ul {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0 3rem;
+    border-top: 1px solid rgba(46, 60, 39, 0.18);
+    border-bottom: 1px solid rgba(46, 60, 39, 0.18);
+  }
+  @media (min-width: 768px) {
+    .spec-southern-peak section[id^="cat-"] > ul { grid-template-columns: 1fr 1fr; }
+  }
+  .spec-southern-peak section[id^="cat-"] > ul > li {
+    border-bottom: 1px dashed rgba(46, 60, 39, 0.18);
+    padding: 1.25rem 0;
+  }
+  /* The last row in each column should not draw a bottom dash. */
+  .spec-southern-peak section[id^="cat-"] > ul > li:last-child,
+  .spec-southern-peak section[id^="cat-"] > ul > li:nth-last-child(2):nth-child(odd) {
+    border-bottom: none;
+  }
+
+  /* Item title: bigger, display, italic-friendly */
+  .spec-southern-peak section[id^="cat-"] article h3 {
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: -0.005em;
+    color: var(--sp-charcoal);
+    line-height: 1.2;
+  }
+  /* Description: readable serif-flavored body */
+  .spec-southern-peak section[id^="cat-"] article p {
+    color: rgba(13, 20, 17, 0.78);
+    font-size: 0.95rem;
+    line-height: 1.55;
+  }
+  /* Price (last child of the article — the PriceBlock) goes copper + display */
+  .spec-southern-peak section[id^="cat-"] article > div:last-child {
+    align-self: flex-start;
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--sp-copper);
+    letter-spacing: -0.01em;
+  }
+  /* Hide the SM/LG label markers, restyle their values inline */
+  .spec-southern-peak section[id^="cat-"] article > div:last-child .text-xs {
+    color: rgba(13, 20, 17, 0.5);
+    font-family: var(--font-sans);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+  }
+  .spec-southern-peak section[id^="cat-"] article > div:last-child .text-slate-300 {
+    color: rgba(196, 122, 22, 0.4);
+  }
+
+  /* Build-Your-Own panel: cream card on cream-2 base, copper accent, big type */
+  .spec-southern-peak section#cat-build-your-own {
+    background-color: var(--sp-charcoal) !important;
+    color: var(--sp-cream);
+    border-radius: 24px;
+    padding: 2rem;
+  }
+  @media (min-width: 768px) {
+    .spec-southern-peak section#cat-build-your-own { padding: 3rem; }
+  }
+  .spec-southern-peak section#cat-build-your-own h2 { color: var(--sp-cream); }
+  .spec-southern-peak section#cat-build-your-own h3 { color: var(--sp-copper-2); }
+  .spec-southern-peak section#cat-build-your-own p { color: rgba(243, 231, 201, 0.85); }
+  .spec-southern-peak section#cat-build-your-own ul[class*="bg-white"] {
+    background: rgba(243, 231, 201, 0.08);
+    border-color: rgba(243, 231, 201, 0.18);
+  }
+  .spec-southern-peak section#cat-build-your-own ul[class*="bg-white"] li {
+    color: var(--sp-cream);
+    border-color: rgba(243, 231, 201, 0.12) !important;
+  }
+  .spec-southern-peak section#cat-build-your-own ul[class*="flex-wrap"] li {
+    background: rgba(243, 231, 201, 0.08);
+    border: 1px solid rgba(243, 231, 201, 0.22) !important;
+    color: var(--sp-cream);
+  }
+
+  /* Sticky food-page sub-nav: tint to brewery palette so it stops being a
+   * pale blue-gray strip on the cream canvas. */
+  .spec-southern-peak nav[aria-label="Menu categories"] {
+    background-color: rgba(13, 20, 17, 0.92) !important;
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(196, 122, 22, 0.4);
+  }
+  .spec-southern-peak nav[aria-label="Menu categories"] a {
+    background: transparent;
+    border-color: rgba(243, 231, 201, 0.22) !important;
+    color: var(--sp-cream) !important;
+  }
+  .spec-southern-peak nav[aria-label="Menu categories"] a:hover {
+    border-color: var(--sp-copper-2) !important;
+    color: var(--sp-copper-2) !important;
+  }
+
+  /* ==================================================================
+   * Events page polish — calendar styling + card padding
+   * ================================================================== */
+  .spec-southern-peak [data-spec-calendar] {
+    background-color: var(--sp-cream-2) !important;
+  }
+  .spec-southern-peak [data-spec-calendar] > .mx-auto,
+  .spec-southern-peak [data-spec-calendar] > div {
+    background-color: var(--sp-foam);
+    border-color: rgba(46, 60, 39, 0.18);
+  }
+  .spec-southern-peak [data-spec-calendar] header h2 {
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    color: var(--sp-charcoal);
+  }
+
+  /* More breathing room between event list cards */
+  .spec-southern-peak ul.space-y-6 > li + li,
+  .spec-southern-peak [class*="space-y-6"] > li + li {
+    margin-top: 1.75rem;
+  }
+
+  /* Recurring-week grid cells: more padding, brewery palette */
+  .spec-southern-peak [class*="md:grid-cols-7"] > div {
+    background-color: var(--sp-foam);
+    border-color: rgba(46, 60, 39, 0.16) !important;
+    padding: 1rem !important;
+  }
+  @media (min-width: 768px) {
+    .spec-southern-peak [class*="md:grid-cols-7"] {
+      gap: 0.75rem;
+    }
+  }
+
+  /* ==================================================================
+   * Footer & hours — readability
+   * ================================================================== */
+  .spec-southern-peak footer {
+    background-color: var(--sp-charcoal) !important;
+    border-top: 1px solid rgba(196, 122, 22, 0.4);
+    color: rgba(243, 231, 201, 0.78);
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+  .spec-southern-peak footer .text-slate-900 { color: var(--sp-cream) !important; }
+  .spec-southern-peak footer .text-slate-600 { color: rgba(243, 231, 201, 0.7) !important; }
+  .spec-southern-peak footer .text-slate-500 { color: rgba(243, 231, 201, 0.55) !important; }
+  .spec-southern-peak footer a { color: rgba(243, 231, 201, 0.85); }
+  .spec-southern-peak footer a:hover { color: var(--sp-copper-2); }
+  .spec-southern-peak footer address { line-height: 1.65; }
+  .spec-southern-peak footer > div > div > div + div {
+    border-top: 1px solid rgba(243, 231, 201, 0.15) !important;
+  }
+  .spec-southern-peak footer .border-t { border-color: rgba(243, 231, 201, 0.18) !important; }
+
+  /* Hours table — uniform row heights, clearer weight contrast */
+  .spec-southern-peak dl.divide-y > div {
+    padding: 0.625rem 0;
+    border-color: rgba(46, 60, 39, 0.16) !important;
+  }
+  .spec-southern-peak dl.divide-y dt {
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--sp-charcoal);
+  }
+  .spec-southern-peak dl.divide-y dd {
+    font-variant-numeric: tabular-nums;
+    color: rgba(13, 20, 17, 0.75);
+  }
+
+  /* Compact NAPBlock — tighten rhythm so "Sweetwater · Apex, NC · 919-…"
+   * doesn't smush against the hours table that follows it. */
+  .spec-southern-peak address.text-sm {
+    line-height: 1.6;
+    margin-bottom: 0.5rem;
+  }
+  .spec-southern-peak address .px-1\\.5 {
+    color: var(--sp-copper) !important;
   }
 
   /* Page-load section stagger — first few sections fade up with offset.

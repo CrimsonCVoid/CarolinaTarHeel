@@ -5,6 +5,7 @@ import { Nav } from '../../shared/nav';
 import { Footer } from '../../shared/footer';
 import { HeroCentered } from '../../shared/hero/hero-centered';
 import { EventCard } from '../../shared/v2/event-card';
+import { MonthCalendar } from '../../shared/v2/month-calendar';
 import { JsonLd } from '../../shared/v2/jsonld';
 
 const NAV_LINKS = [
@@ -70,6 +71,8 @@ export function RestaurantV2Events({ content, settings }: PageRenderProps<Events
           bgImage={content.hero?.backgroundImage}
         />
 
+        <MonthCalendar events={upcoming} />
+
         <section className="bg-white">
           <Container className="py-16 md:py-20">
             <h2 className="font-display text-3xl font-semibold tracking-tight text-slate-900 md:text-4xl">
@@ -84,7 +87,7 @@ export function RestaurantV2Events({ content, settings }: PageRenderProps<Events
                     <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-500">{group.label}</h3>
                     <ul className="mt-4 space-y-6">
                       {group.items.map((event, i) => (
-                        <li key={event.slug ?? i}>
+                        <li key={event.slug ?? i} id={`event-${event.slug}`} className="scroll-mt-24">
                           <EventCard event={event} />
                         </li>
                       ))}
@@ -95,7 +98,7 @@ export function RestaurantV2Events({ content, settings }: PageRenderProps<Events
             ) : (
               <ul className="mt-10 space-y-6">
                 {upcoming.map((event, i) => (
-                  <li key={event.slug ?? i}>
+                  <li key={event.slug ?? i} id={`event-${event.slug}`} className="scroll-mt-24">
                     <EventCard event={event} />
                   </li>
                 ))}
