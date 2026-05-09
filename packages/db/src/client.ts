@@ -1,13 +1,17 @@
 import { createBrowserClient as createSsrBrowser, createServerClient as createSsrServer } from '@supabase/ssr';
 import { createClient } from '@supabase/supabase-js';
 
+// Avoid pulling @types/node as a hard dep for this package. The host runtime
+// (Next.js / Node) provides the real `process`; we only need `env` access.
+const procEnv = (globalThis as { process?: { env?: Record<string, string | undefined> } }).process?.env ?? {};
+
 type CookieStore = {
   getAll(): { name: string; value: string }[];
   set(name: string, value: string, options?: Record<string, unknown>): void;
 };
 
 function requireEnv(key: string): string {
-  const v = process.env[key];
+  const v = procEnv[key];
   if (!v || v.length === 0) {
     throw new Error(`Missing required env var ${key}`);
   }

@@ -1,12 +1,14 @@
 import type { z } from 'zod';
 import type { TemplateDefinition, PageDefinition, SiteSettings } from './types';
 import { restaurantV1 } from './restaurant-v1/index';
+import { restaurantV2 } from './restaurant-v2/index';
 import { serviceV1 } from './service-v1/index';
 import type { ReactElement } from 'react';
 import { createElement } from 'react';
 
 const registry: Record<string, TemplateDefinition> = {
   [restaurantV1.id]: restaurantV1,
+  [restaurantV2.id]: restaurantV2,
   [serviceV1.id]: serviceV1,
 };
 
@@ -60,4 +62,4 @@ export function renderTemplateUnsafe(
   return createElement(page.Component, { content: content as never, settings });
 }
 
-export { restaurantV1, serviceV1 };
+export { restaurantV1, restaurantV2, serviceV1 };
