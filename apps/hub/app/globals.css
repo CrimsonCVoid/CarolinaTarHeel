@@ -113,4 +113,16 @@
     93% { transform: rotate(-8deg); }
     96% { transform: rotate(0deg); }
   }
+  /* Map marker pulse — expanding ring on each NC site dot. Stagger via
+     animation-delay per instance so 10 markers don't fire in unison. */
+  @keyframes thw-marker-pulse {
+    0%   { r: 3; opacity: 0.55; }
+    80%  { r: 14; opacity: 0; }
+    100% { r: 14; opacity: 0; }
+  }
+  /* Skeleton shimmer — used by Suspense fallbacks for charts. */
+  @keyframes thw-shimmer {
+    0%   { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
 }

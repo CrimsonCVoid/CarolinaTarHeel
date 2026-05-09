@@ -3,30 +3,52 @@ import dynamic from 'next/dynamic';
 import { Container } from '@tarheel/ui';
 import { HeroBrowserDemo } from '@/components/hero/hero-browser-demo';
 import { LiveTicker } from '@/components/live-ticker';
+import { NumbersStrip } from '@/components/numbers-strip';
 import { FAQ, FAQ_ITEMS } from '@/components/faq';
 import { FinalCTA } from '@/components/final-cta';
+import { CardsRowSkeleton, ChartGridSkeleton, RaceSkeleton, SectionSkeleton } from '@/components/skeletons';
 
-// Below-the-fold heavy sections (Recharts ~50 KB, framer-motion ~30 KB gzipped)
-// dynamic-load so they don't blow out First Load JS budgets. Server rendering
-// stays on — HTML is complete for SEO and JSON-LD covers everything.
-const PerformanceRace = dynamic(() =>
-  import('@/components/race/performance-race').then((m) => m.PerformanceRace),
+// Below-the-fold heavy sections dynamic-load with shape-matching skeletons —
+// page never pops empty regions while chunks hydrate. Recharts ~50 KB and
+// framer-motion ~30 KB gzipped stay out of the initial paint.
+const PerformanceRace = dynamic(
+  () => import('@/components/race/performance-race').then((m) => m.PerformanceRace),
+  { loading: () => <RaceSkeleton /> },
 );
-const SeoProofPanel = dynamic(() =>
-  import('@/components/seo/seo-proof-panel').then((m) => m.SeoProofPanel),
+const SeoProofPanel = dynamic(
+  () => import('@/components/seo/seo-proof-panel').then((m) => m.SeoProofPanel),
+  { loading: () => <ChartGridSkeleton /> },
 );
-const PricingSummary = dynamic(() =>
-  import('@/components/pricing/pricing-summary').then((m) => m.PricingSummary),
+const PricingSummary = dynamic(
+  () => import('@/components/pricing/pricing-summary').then((m) => m.PricingSummary),
+  { loading: () => <SectionSkeleton height={520} bg="bg-slate-50" /> },
 );
-const BuildTimeline = dynamic(() =>
-  import('@/components/process/build-timeline').then((m) => m.BuildTimeline),
+const BuildTimeline = dynamic(
+  () => import('@/components/process/build-timeline').then((m) => m.BuildTimeline),
+  { loading: () => <SectionSkeleton height={400} /> },
 );
-const ArchitectureDiagram = dynamic(() =>
-  import('@/components/architecture-diagram').then((m) => m.ArchitectureDiagram),
+const ArchitectureDiagram = dynamic(
+  () => import('@/components/architecture-diagram').then((m) => m.ArchitectureDiagram),
+  { loading: () => <SectionSkeleton height={420} bg="bg-slate-900" /> },
 );
-const CaseStudies = dynamic(() => import('@/components/case-studies').then((m) => m.CaseStudies));
-const RoiCalculator = dynamic(() =>
-  import('@/components/calc/roi-calculator').then((m) => m.RoiCalculator),
+const ComparisonRadar = dynamic(
+  () => import('@/components/comparison-radar').then((m) => m.ComparisonRadar),
+  { loading: () => <SectionSkeleton height={520} /> },
+);
+const NCMap = dynamic(() => import('@/components/nc-map').then((m) => m.NCMap), {
+  loading: () => <SectionSkeleton height={420} bg="bg-slate-900" />,
+});
+const ActivityFeed = dynamic(
+  () => import('@/components/activity-feed').then((m) => m.ActivityFeed),
+  { loading: () => <SectionSkeleton height={300} bg="bg-slate-50" /> },
+);
+const CaseStudies = dynamic(
+  () => import('@/components/case-studies').then((m) => m.CaseStudies),
+  { loading: () => <CardsRowSkeleton /> },
+);
+const RoiCalculator = dynamic(
+  () => import('@/components/calc/roi-calculator').then((m) => m.RoiCalculator),
+  { loading: () => <SectionSkeleton height={460} bg="bg-slate-50" /> },
 );
 
 const ORG_LD = {
@@ -98,7 +120,7 @@ export default function MarketingHome() {
                 <span className="text-brand-600">✓</span>Live in 5–7 days with content in hand
               </li>
               <li className="flex gap-2">
-                <span className="text-brand-600">✓</span>$750–$2,750 build · $39–$129/mo hosting
+                <span className="text-brand-600">✓</span>From $750 to launch · $39/mo to host
               </li>
             </ul>
           </div>
@@ -111,8 +133,14 @@ export default function MarketingHome() {
       {/* §2 Live ticker */}
       <LiveTicker />
 
+      {/* Big numbers — animated count-up of the 6 stats we lead with. */}
+      <NumbersStrip />
+
       {/* §3 Performance race */}
       <PerformanceRace />
+
+      {/* Activity feed — fleet activity streaming in. */}
+      <ActivityFeed />
 
       {/* §4 SEO proof */}
       <SeoProofPanel />
@@ -125,6 +153,12 @@ export default function MarketingHome() {
 
       {/* §7 Architecture comparison */}
       <ArchitectureDiagram />
+
+      {/* Radar comparison — us vs Wix vs agency on six dimensions. */}
+      <ComparisonRadar />
+
+      {/* NC service map — pulsing dots for each Carolina city we ship in. */}
+      <NCMap />
 
       {/* §8 Case studies */}
       <CaseStudies />
