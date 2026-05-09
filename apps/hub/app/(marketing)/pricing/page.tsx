@@ -70,8 +70,17 @@ export default function PricingPage() {
         {TIERS.map((t) => (
           <li
             key={t.name}
-            className={`rounded-2xl border p-8 ${
-              t.highlight ? 'border-brand-600 bg-brand-50 shadow-md' : 'border-slate-200 bg-white'
+            // MOTION.md §3.5 — pricing tier hover. Highlighted (Standard) tier
+            // gets the only continuous animation on the marketing site:
+            // border opacity oscillates 100 ↔ 70% on a 4-second cycle, paused
+            // on hover. The keyframe `thw-ring-breath` lives in globals.css.
+            className={`group rounded-2xl border p-8
+              transition-[border-color,transform,box-shadow] duration-[var(--dur-base)] ease-[var(--ease-out-quint)]
+              hover:-translate-y-1 hover:border-brand-700 hover:shadow-md
+              motion-reduce:hover:translate-y-0 ${
+                t.highlight
+                  ? 'border-brand-600 bg-brand-50 shadow-md motion-safe:animate-[thw-ring-breath_4s_var(--ease-in-out-cubic)_infinite] hover:animate-none'
+                  : 'border-slate-200 bg-white'
             }`}
           >
             <div className="flex items-baseline justify-between">

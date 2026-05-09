@@ -2,7 +2,15 @@
 
 import { useCallback, useState, useTransition } from 'react';
 import { Button } from '@tarheel/ui';
-import { EditorProvider, FormFromSchema, PreviewIframe, VersionList, type PageVersion } from '@tarheel/editor';
+import {
+  AutosaveIndicator,
+  EditorProvider,
+  FormFromSchema,
+  PreviewIframe,
+  VersionList,
+  type AutosaveStatus,
+  type PageVersion,
+} from '@tarheel/editor';
 import type { FieldMeta } from '@tarheel/templates';
 import { saveDraft, publishPage, restoreVersion, uploadMedia } from './actions';
 
@@ -34,30 +42,44 @@ export function EditorShell({
   const [savedAt, setSavedAt] = useState<Date | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [status, setStatus] = useState<AutosaveStatus>('idle');
 
   const handleAutosave = useCallback(
     (next: Record<string, unknown>) => {
+      setStatus('saving');
       startTransition(async () => {
         try {
           await saveDraft(siteId, slug, next);
           setSavedAt(new Date());
+          setStatus('saved');
           setRefreshKey((k) => k + 1);
         } catch (e) {
           setError(e instanceof Error ? e.message : 'Save failed');
+          setStatus('error');
         }
       });
     },
     [siteId, slug],
   );
 
+  // Mirror form-level changes to the indicator: "Editing…" appears the
+  // moment the user types, before autosave fires.
+  const handleDraftChange = useCallback((next: Record<string, unknown>) => {
+    setDraft(next);
+    setStatus((s) => (s === 'saving' ? s : 'editing'));
+  }, []);
+
   const handlePublish = () => {
+    setStatus('saving');
     startTransition(async () => {
       try {
         setError(null);
         await publishPage(siteId, slug);
         setSavedAt(new Date());
+        setStatus('saved');
       } catch (e) {
         setError(e instanceof Error ? e.message : 'Publish failed');
+        setStatus('error');
       }
     });
   };
@@ -94,8 +116,8 @@ export function EditorShell({
               </h2>
               <p className="truncate text-xs text-slate-500">{slug}</p>
             </div>
-            <div className="flex items-center gap-3 text-xs text-slate-500">
-              {isPending ? 'Saving…' : savedAt ? `Saved ${savedAt.toLocaleTimeString()}` : 'Not saved'}
+            <div className="flex items-center gap-3">
+              <AutosaveIndicator status={status} savedAt={savedAt} errorMessage={error ?? undefined} />
               <Button onClick={handlePublish} disabled={isPending}>
                 Publish
               </Button>
@@ -104,7 +126,7 @@ export function EditorShell({
           {error ? (
             <div className="mb-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-800">{error}</div>
           ) : null}
-          <FormFromSchema meta={editorMeta} value={draft} onChange={setDraft} onAutosave={handleAutosave} />
+          <FormFromSchema meta={editorMeta} value={draft} onChange={handleDraftChange} onAutosave={handleAutosave} />
           <details className="mt-6 rounded-2xl border border-slate-200 bg-white">
             <summary className="cursor-pointer px-5 py-4 text-sm font-semibold text-slate-900">
               Version history

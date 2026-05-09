@@ -3,4 +3,5 @@ export { renderField } from './fields/render-field';
 export { EditorProvider, useEditor } from './context';
 export { PreviewIframe } from './preview';
 export { VersionList, type PageVersion } from './version-list';
+export { AutosaveIndicator, type AutosaveStatus } from './autosave-indicator';
 export type { FieldComponentProps, UploadHandler, EditorContext } from './types';

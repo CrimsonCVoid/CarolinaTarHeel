@@ -2,8 +2,23 @@ import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from './cn';
 
+/*
+ * Press feedback (MOTION.md §7.1):
+ *   active:scale(0.97) for the duration of the press, returning via
+ *   --ease-out-back over --dur-base. CSS-only, costs nothing.
+ *   `motion-reduce:transition-none` collapses to instant when the user
+ *   prefers reduced motion (the global reset in globals.css also catches it).
+ */
 const buttonVariants = cva(
-  'inline-flex items-center justify-center whitespace-nowrap rounded-2xl text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600 disabled:pointer-events-none disabled:opacity-50',
+  [
+    'inline-flex items-center justify-center whitespace-nowrap rounded-2xl text-sm font-medium',
+    'transition-[background-color,color,border-color,transform,box-shadow]',
+    'duration-[var(--dur-fast)] ease-[var(--ease-out-quint)]',
+    'active:scale-[0.97] active:duration-[var(--dur-instant)]',
+    'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600',
+    'disabled:pointer-events-none disabled:opacity-50',
+    'motion-reduce:transition-none motion-reduce:active:scale-100',
+  ].join(' '),
   {
     variants: {
       variant: {

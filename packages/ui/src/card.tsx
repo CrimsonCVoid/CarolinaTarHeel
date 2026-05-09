@@ -2,7 +2,19 @@ import * as React from 'react';
 import { cn } from './cn';
 
 export function Card({ className, ...p }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn('rounded-2xl border border-slate-200 bg-white shadow-sm', className)} {...p} />;
+  // Transition uses motion tokens so hover / focus shifts feel like the rest of
+  // the system (MOTION.md §2). Concrete hover styles are layered on by callers.
+  return (
+    <div
+      className={cn(
+        'rounded-2xl border border-slate-200 bg-white shadow-sm',
+        'transition-[border-color,box-shadow,transform] duration-[var(--dur-base)] ease-[var(--ease-out-quint)]',
+        'motion-reduce:transition-none',
+        className,
+      )}
+      {...p}
+    />
+  );
 }
 export function CardHeader({ className, ...p }: React.HTMLAttributes<HTMLDivElement>) {
   return <div className={cn('flex flex-col space-y-1.5 p-6', className)} {...p} />;

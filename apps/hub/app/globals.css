@@ -15,6 +15,23 @@
   --color-brand-800: #28455f;
   --color-brand-900: #243b51;
   --color-brand-950: #162636;
+
+  /* === Motion vocabulary (see MOTION.md) ============================ */
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out-back: cubic-bezier(0.34, 1.4, 0.64, 1);
+  --ease-in-out-cubic: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --dur-instant: 80ms;
+  --dur-fast: 160ms;
+  --dur-base: 240ms;
+  --dur-medium: 400ms;
+  --dur-slow: 640ms;
+  --dur-deliberate: 1000ms;
+
+  --stagger-tight: 40ms;
+  --stagger-base: 60ms;
+  --stagger-loose: 100ms;
 }
 
 @layer base {
@@ -25,5 +42,52 @@
   body {
     background: white;
     color: var(--color-slate-900);
+  }
+
+  /*
+   * Accessibility: prefers-reduced-motion shuts down everything that
+   * isn't strictly state communication. Per MOTION.md §9 — must load
+   * BEFORE any other animation styles.
+   */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer utilities {
+  /* Reusable keyframes for state-machine animations */
+  @keyframes thw-pulse-soft {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+  @keyframes thw-shake-gentle {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-2px); }
+    40% { transform: translateX(2px); }
+    60% { transform: translateX(-2px); }
+    80% { transform: translateX(1px); }
+  }
+  @keyframes thw-ring-breath {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+  @keyframes thw-rise {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes thw-rise-large {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes thw-draw-check {
+    from { stroke-dashoffset: 24; }
+    to   { stroke-dashoffset: 0; }
   }
 }

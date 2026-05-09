@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Container } from '@tarheel/ui';
+import { RevealSection } from '@/components/reveal-section';
 
 export default function MarketingHome() {
   return (
@@ -37,7 +38,7 @@ export default function MarketingHome() {
         </Container>
       </section>
 
-      <section className="border-y border-slate-200 bg-slate-50">
+      <RevealSection className="border-y border-slate-200 bg-slate-50">
         <Container className="py-16 md:py-20">
           <ul className="grid gap-8 md:grid-cols-3">
             <li>
@@ -63,9 +64,9 @@ export default function MarketingHome() {
             </li>
           </ul>
         </Container>
-      </section>
+      </RevealSection>
 
-      <section className="bg-white">
+      <RevealSection className="bg-white">
         <Container className="py-20 md:py-24">
           <div className="grid gap-12 lg:grid-cols-2">
             <div>
@@ -95,9 +96,9 @@ export default function MarketingHome() {
             </div>
           </div>
         </Container>
-      </section>
+      </RevealSection>
 
-      <section className="bg-slate-900 text-white">
+      <RevealSection className="bg-slate-900 text-white">
         <Container className="py-20 md:py-24">
           <div className="mx-auto max-w-3xl text-center">
             <h2 className="font-display text-4xl font-semibold tracking-tight md:text-5xl">
@@ -114,7 +115,7 @@ export default function MarketingHome() {
             </Link>
           </div>
         </Container>
-      </section>
+      </RevealSection>
     </>
   );
 }

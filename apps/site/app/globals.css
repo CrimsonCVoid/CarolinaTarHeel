@@ -15,6 +15,18 @@
   --color-brand-800: #28455f;
   --color-brand-900: #243b51;
   --color-brand-950: #162636;
+
+  /*
+   * Motion tokens — client templates use these but with strict restraint
+   * (no continuous loops, no animation libraries). See MOTION.md §5.
+   */
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out-cubic: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --dur-instant: 80ms;
+  --dur-fast: 160ms;
+  --dur-base: 240ms;
+  --dur-medium: 400ms;
 }
 
 @layer base {
@@ -28,5 +40,28 @@
   :focus-visible {
     outline: 2px solid var(--color-brand-600);
     outline-offset: 2px;
+    transition: outline-color var(--dur-fast) var(--ease-out-quint);
+  }
+
+  /* prefers-reduced-motion reset (MOTION.md §9). */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer utilities {
+  /* One-shot section reveal used by templates. Triggered via the .thw-reveal
+     class and removed once visible. CSS-only path — no JS. Keeps client
+     bundles at 0 KB animation JS per the §5.2 budget. */
+  @keyframes thw-rise {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
 }
