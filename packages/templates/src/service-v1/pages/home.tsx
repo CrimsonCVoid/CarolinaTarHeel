@@ -1,11 +1,11 @@
 import { Container } from '@tarheel/ui';
 import { Wrench, Flame, Snowflake, Droplet, Zap, Leaf, type LucideIcon } from 'lucide-react';
-import type { PageRenderProps } from '../../types.js';
-import type { HomeContent } from '../schema.js';
-import { Nav } from '../../shared/nav.js';
-import { Footer } from '../../shared/footer.js';
-import { HeroCentered } from '../../shared/hero/hero-centered.js';
-import { CTA } from '../../shared/cta/index.js';
+import type { PageRenderProps } from '../../types';
+import type { HomeContent } from '../schema';
+import { Nav } from '../../shared/nav';
+import { Footer } from '../../shared/footer';
+import { HeroCentered } from '../../shared/hero/hero-centered';
+import { CTA } from '../../shared/cta/index';
 
 const NAV_LINKS = [
   { label: 'Services', href: '/services' },

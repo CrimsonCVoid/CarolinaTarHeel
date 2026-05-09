@@ -6,7 +6,7 @@ export type {
   FieldMeta,
   FieldOption,
   SiteSettings,
-} from './types.js';
-export { getTemplate, listTemplates, getPage, renderTemplate } from './registry.js';
-export { restaurantV1 } from './restaurant-v1/index.js';
-export { serviceV1 } from './service-v1/index.js';
+} from './types';
+export { getTemplate, listTemplates, getPage, renderTemplate } from './registry';
+export { restaurantV1 } from './restaurant-v1/index';
+export { serviceV1 } from './service-v1/index';

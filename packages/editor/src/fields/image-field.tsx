@@ -2,8 +2,8 @@
 
 import { useRef, useState } from 'react';
 import { Button, Input, Label } from '@tarheel/ui';
-import { useEditor } from '../context.js';
-import type { FieldComponentProps } from '../types.js';
+import { useEditor } from '../context';
+import type { FieldComponentProps } from '../types';
 
 export function ImageField({ name, meta, value, onChange, error }: FieldComponentProps) {
   const editor = useEditor();

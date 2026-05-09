@@ -1,17 +1,17 @@
-import type { TemplateDefinition } from '../types.js';
-import { homeContent, menuPageContent, aboutPageContent, contactPageContent } from './schema.js';
-import { defaultHome, defaultMenu, defaultAbout, defaultContact } from './default-content.js';
+import type { TemplateDefinition } from '../types';
+import { homeContent, menuPageContent, aboutPageContent, contactPageContent } from './schema';
+import { defaultHome, defaultMenu, defaultAbout, defaultContact } from './default-content';
 import {
   homeEditorMeta,
   menuEditorMeta,
   aboutEditorMeta,
   contactEditorMeta,
   settingsEditorMeta,
-} from './editor-meta.js';
-import { RestaurantHome } from './pages/home.js';
-import { RestaurantMenu } from './pages/menu.js';
-import { RestaurantAbout } from './pages/about.js';
-import { RestaurantContact } from './pages/contact.js';
+} from './editor-meta';
+import { RestaurantHome } from './pages/home';
+import { RestaurantMenu } from './pages/menu';
+import { RestaurantAbout } from './pages/about';
+import { RestaurantContact } from './pages/contact';
 
 export const restaurantV1: TemplateDefinition = {
   id: 'restaurant_v1',

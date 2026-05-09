@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import { Inter, Fraunces } from 'next/font/google';
 import './globals.css';
 
-const sans = Inter({ subsets: ['latin'], variable: '--font-sans', display: 'swap' });
-const display = Fraunces({ subsets: ['latin'], variable: '--font-display', display: 'swap' });
+const sans = Inter({ subsets: ['latin'], variable: '--font-sans-runtime', display: 'swap' });
+const display = Fraunces({ subsets: ['latin'], variable: '--font-display-runtime', display: 'swap' });
 
 export const metadata: Metadata = {
   title: {

@@ -1,5 +1,22 @@
 @import 'tailwindcss';
 
+@theme {
+  --font-sans: var(--font-sans-runtime), system-ui, sans-serif;
+  --font-display: var(--font-display-runtime), serif;
+
+  --color-brand-50: #f4f7fb;
+  --color-brand-100: #e7eef6;
+  --color-brand-200: #cadcec;
+  --color-brand-300: #9cbed9;
+  --color-brand-400: #679bc1;
+  --color-brand-500: #447ea8;
+  --color-brand-600: #33658c;
+  --color-brand-700: #2b5272;
+  --color-brand-800: #28455f;
+  --color-brand-900: #243b51;
+  --color-brand-950: #162636;
+}
+
 @layer base {
   html {
     -webkit-font-smoothing: antialiased;
@@ -9,6 +26,7 @@
     @apply bg-white text-slate-900;
   }
   :focus-visible {
-    @apply outline-2 outline-offset-2 outline-brand-600;
+    outline: 2px solid var(--color-brand-600);
+    outline-offset: 2px;
   }
 }

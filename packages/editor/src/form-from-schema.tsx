@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { FieldMeta } from '@tarheel/templates';
-import { renderField } from './fields/render-field.js';
+import { renderField } from './fields/render-field';
 
 export interface FormFromSchemaProps {
   meta: Record<string, FieldMeta>;

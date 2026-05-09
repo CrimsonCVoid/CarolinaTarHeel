@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3001",
+    "dev": "next dev -p 3011",
     "build": "next build",
-    "start": "next start -p 3001",
+    "start": "next start -p 3011",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf .next .turbo"
@@ -20,6 +20,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.0.0-beta.4",
     "@tarheel/config": "workspace:*",
     "@types/node": "^22.9.0",
     "@types/react": "^18.3.12",

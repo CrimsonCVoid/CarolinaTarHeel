@@ -1,7 +1,7 @@
 import 'server-only';
 import { cache } from 'react';
-import { env } from './env.js';
-import { siteSupabase } from './supabase.js';
+import { env } from './env';
+import { siteSupabase } from './supabase';
 import type { SiteSettings } from '@tarheel/templates';
 
 interface SiteRow {

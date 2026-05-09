@@ -1,4 +1,4 @@
-import type { WeeklyHours } from '../types.js';
+import type { WeeklyHours } from '../types';
 
 const DAYS: Array<{ key: keyof Omit<WeeklyHours, 'note'>; label: string }> = [
   { key: 'mon', label: 'Mon' },

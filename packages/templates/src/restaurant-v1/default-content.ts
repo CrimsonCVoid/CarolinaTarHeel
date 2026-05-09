@@ -1,4 +1,4 @@
-import type { HomeContent, MenuPageContent, AboutPageContent, ContactPageContent } from './schema.js';
+import type { HomeContent, MenuPageContent, AboutPageContent, ContactPageContent } from './schema';
 
 export const defaultHome: HomeContent = {
   hero: {

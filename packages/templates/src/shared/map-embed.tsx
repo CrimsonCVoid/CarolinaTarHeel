@@ -1,4 +1,4 @@
-import type { Address } from '../types.js';
+import type { Address } from '../types';
 
 /**
  * Lazy-loaded static map. We render only an <iframe> with `loading="lazy"`

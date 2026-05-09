@@ -1,4 +1,4 @@
-import type { FieldMeta } from '../types.js';
+import type { FieldMeta } from '../types';
 
 export const homeEditorMeta: Record<string, FieldMeta> = {
   hero: {

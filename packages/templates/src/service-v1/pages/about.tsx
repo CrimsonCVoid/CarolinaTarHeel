@@ -1,9 +1,9 @@
 import Image from 'next/image';
 import { Container } from '@tarheel/ui';
-import type { PageRenderProps } from '../../types.js';
-import type { AboutPageContent } from '../schema.js';
-import { Nav } from '../../shared/nav.js';
-import { Footer } from '../../shared/footer.js';
+import type { PageRenderProps } from '../../types';
+import type { AboutPageContent } from '../schema';
+import { Nav } from '../../shared/nav';
+import { Footer } from '../../shared/footer';
 
 const NAV_LINKS = [
   { label: 'Services', href: '/services' },

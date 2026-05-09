@@ -1,17 +1,17 @@
 'use client';
 
 import type { FieldMeta } from '@tarheel/templates';
-import { TextField } from './text-field.js';
-import { TextareaField } from './textarea-field.js';
-import { BooleanField } from './boolean-field.js';
-import { NumberField } from './number-field.js';
-import { SelectField } from './select-field.js';
-import { ColorField } from './color-field.js';
-import { ImageField } from './image-field.js';
-import { ObjectField } from './object-field.js';
-import { ArrayField } from './array-field.js';
-import { AddressField } from './address-field.js';
-import { HoursField } from './hours-field.js';
+import { TextField } from './text-field';
+import { TextareaField } from './textarea-field';
+import { BooleanField } from './boolean-field';
+import { NumberField } from './number-field';
+import { SelectField } from './select-field';
+import { ColorField } from './color-field';
+import { ImageField } from './image-field';
+import { ObjectField } from './object-field';
+import { ArrayField } from './array-field';
+import { AddressField } from './address-field';
+import { HoursField } from './hours-field';
 
 interface Args {
   name: string;

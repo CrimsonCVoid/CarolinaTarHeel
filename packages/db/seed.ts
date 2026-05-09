@@ -5,7 +5,7 @@
  *
  * Requires: NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, SEED_OPERATOR_EMAIL.
  */
-import { createAdminClient } from './src/client.js';
+import { createAdminClient } from './src/client';
 
 const OPERATOR_EMAIL = process.env.SEED_OPERATOR_EMAIL ?? 'carter@carolinacomfort.info';
 
@@ -38,7 +38,7 @@ async function main() {
   const { data: site, error: siteErr } = await supabase
     .from('sites')
     .upsert(
-      { org_id: org.id, domain: 'joes.test.local', template_id: 'restaurant_v1', status: 'live' },
+      { org_id: org.id, domain: 'localhost:3011', template_id: 'restaurant_v1', status: 'live' },
       { onConflict: 'domain' },
     )
     .select()

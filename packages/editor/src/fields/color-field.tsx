@@ -1,6 +1,6 @@
 'use client';
 import { Input, Label } from '@tarheel/ui';
-import type { FieldComponentProps } from '../types.js';
+import type { FieldComponentProps } from '../types';
 
 export function ColorField({ name, meta, value, onChange }: FieldComponentProps) {
   const v = typeof value === 'string' ? value : '#000000';

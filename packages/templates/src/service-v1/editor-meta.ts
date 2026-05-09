@@ -1,4 +1,4 @@
-import type { FieldMeta } from '../types.js';
+import type { FieldMeta } from '../types';
 
 export const homeEditorMeta: Record<string, FieldMeta> = {
   hero: {
@@ -198,4 +198,4 @@ export const contactEditorMeta: Record<string, FieldMeta> = {
   },
 };
 
-export { settingsEditorMeta } from '../restaurant-v1/editor-meta.js';
+export { settingsEditorMeta } from '../restaurant-v1/editor-meta';

@@ -1,5 +1,5 @@
 'use client';
-import type { FieldComponentProps } from '../types.js';
+import type { FieldComponentProps } from '../types';
 
 export function BooleanField({ name, meta, value, onChange }: FieldComponentProps) {
   const checked = Boolean(value);

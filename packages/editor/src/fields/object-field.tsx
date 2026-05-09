@@ -1,7 +1,7 @@
 'use client';
 
-import { renderField } from './render-field.js';
-import type { FieldComponentProps } from '../types.js';
+import { renderField } from './render-field';
+import type { FieldComponentProps } from '../types';
 
 export function ObjectField({ name, meta, value, onChange, error }: FieldComponentProps) {
   const obj = (value && typeof value === 'object' ? (value as Record<string, unknown>) : {});

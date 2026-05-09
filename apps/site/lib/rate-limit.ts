@@ -1,4 +1,4 @@
-import { LRUCache } from './lru.js';
+import { LRUCache } from './lru';
 
 const buckets = new LRUCache<string, { count: number; resetAt: number }>(2000);
 

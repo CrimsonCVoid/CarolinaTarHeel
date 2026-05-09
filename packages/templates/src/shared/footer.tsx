@@ -1,5 +1,5 @@
 import { Container } from '@tarheel/ui';
-import type { SiteSettings } from '../types.js';
+import type { SiteSettings } from '../types';
 
 export function Footer({ settings }: { settings: SiteSettings }) {
   const brand = settings.brand.name ?? 'Site';

@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, type ReactNode } from 'react';
-import type { EditorContext as EditorCtx } from './types.js';
+import type { EditorContext as EditorCtx } from './types';
 
 const Ctx = createContext<EditorCtx | null>(null);
 

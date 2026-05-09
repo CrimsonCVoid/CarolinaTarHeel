@@ -4,7 +4,7 @@ import type {
   AreasPageContent,
   AboutPageContent,
   ContactPageContent,
-} from './schema.js';
+} from './schema';
 
 export const defaultHome: HomeContent = {
   hero: {

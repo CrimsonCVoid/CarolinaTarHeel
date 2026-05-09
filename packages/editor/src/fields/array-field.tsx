@@ -2,8 +2,8 @@
 
 import { Button } from '@tarheel/ui';
 import { Plus, Trash2, ChevronUp, ChevronDown } from 'lucide-react';
-import { renderField } from './render-field.js';
-import type { FieldComponentProps } from '../types.js';
+import { renderField } from './render-field';
+import type { FieldComponentProps } from '../types';
 import type { FieldMeta } from '@tarheel/templates';
 
 function blankItem(fields: Record<string, FieldMeta> | undefined): unknown {

@@ -1,6 +1,6 @@
 'use client';
 import { Input, Label } from '@tarheel/ui';
-import type { FieldComponentProps } from '../types.js';
+import type { FieldComponentProps } from '../types';
 
 export function NumberField({ name, meta, value, onChange, error }: FieldComponentProps) {
   const v = typeof value === 'number' ? value : '';

@@ -1,5 +1,5 @@
 import { createHmac, timingSafeEqual } from 'node:crypto';
-import { env } from './env.js';
+import { env } from './env';
 
 interface TokenPayload {
   siteId: string;

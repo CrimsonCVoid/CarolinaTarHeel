@@ -1,6 +1,6 @@
 import 'server-only';
 import { redirect } from 'next/navigation';
-import { createServerClient } from './supabase/server.js';
+import { createServerClient } from './supabase/server';
 
 export async function requireUser() {
   const supabase = await createServerClient();

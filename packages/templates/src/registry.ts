@@ -1,6 +1,6 @@
-import type { TemplateDefinition, PageDefinition, SiteSettings } from './types.js';
-import { restaurantV1 } from './restaurant-v1/index.js';
-import { serviceV1 } from './service-v1/index.js';
+import type { TemplateDefinition, PageDefinition, SiteSettings } from './types';
+import { restaurantV1 } from './restaurant-v1/index';
+import { serviceV1 } from './service-v1/index';
 import type { ReactElement } from 'react';
 import { createElement } from 'react';
 

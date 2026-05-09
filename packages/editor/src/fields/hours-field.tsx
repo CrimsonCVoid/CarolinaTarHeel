@@ -1,7 +1,7 @@
 'use client';
 
 import { Input, Label } from '@tarheel/ui';
-import type { FieldComponentProps } from '../types.js';
+import type { FieldComponentProps } from '../types';
 
 const DAYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'] as const;
 const LABELS: Record<(typeof DAYS)[number], string> = {

@@ -1,11 +1,11 @@
 import { Container } from '@tarheel/ui';
-import type { PageRenderProps } from '../../types.js';
-import type { ContactPageContent } from '../schema.js';
-import { Nav } from '../../shared/nav.js';
-import { Footer } from '../../shared/footer.js';
-import { ContactForm } from '../../shared/forms/contact-form.js';
-import { Hours } from '../../shared/hours.js';
-import { FAQ } from '../../shared/faq/index.js';
+import type { PageRenderProps } from '../../types';
+import type { ContactPageContent } from '../schema';
+import { Nav } from '../../shared/nav';
+import { Footer } from '../../shared/footer';
+import { ContactForm } from '../../shared/forms/contact-form';
+import { Hours } from '../../shared/hours';
+import { FAQ } from '../../shared/faq/index';
 
 const NAV_LINKS = [
   { label: 'Services', href: '/services' },

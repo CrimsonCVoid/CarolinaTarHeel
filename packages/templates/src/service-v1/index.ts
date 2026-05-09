@@ -1,6 +1,6 @@
-import type { TemplateDefinition } from '../types.js';
-import { homeContent, servicesPageContent, areasPageContent, aboutPageContent, contactPageContent } from './schema.js';
-import { defaultHome, defaultServices, defaultAreas, defaultAbout, defaultContact } from './default-content.js';
+import type { TemplateDefinition } from '../types';
+import { homeContent, servicesPageContent, areasPageContent, aboutPageContent, contactPageContent } from './schema';
+import { defaultHome, defaultServices, defaultAreas, defaultAbout, defaultContact } from './default-content';
 import {
   homeEditorMeta,
   servicesEditorMeta,
@@ -8,12 +8,12 @@ import {
   aboutEditorMeta,
   contactEditorMeta,
   settingsEditorMeta,
-} from './editor-meta.js';
-import { ServiceHome } from './pages/home.js';
-import { ServicePagesList } from './pages/services.js';
-import { ServiceAreas } from './pages/areas.js';
-import { ServiceAbout } from './pages/about.js';
-import { ServiceContact } from './pages/contact.js';
+} from './editor-meta';
+import { ServiceHome } from './pages/home';
+import { ServicePagesList } from './pages/services';
+import { ServiceAreas } from './pages/areas';
+import { ServiceAbout } from './pages/about';
+import { ServiceContact } from './pages/contact';
 
 export const serviceV1: TemplateDefinition = {
   id: 'service_v1',

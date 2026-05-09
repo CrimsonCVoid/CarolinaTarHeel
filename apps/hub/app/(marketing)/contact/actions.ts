@@ -20,7 +20,7 @@ export async function submitLead(input: z.infer<typeof Lead>) {
     await resend.emails.send({
       from: env.RESEND_FROM_EMAIL,
       to: env.RESEND_FROM_EMAIL,
-      reply_to: parsed.email,
+      replyTo: parsed.email,
       subject: `New lead: ${parsed.name}${parsed.business ? ` (${parsed.business})` : ''}`,
       text: [
         `Name: ${parsed.name}`,

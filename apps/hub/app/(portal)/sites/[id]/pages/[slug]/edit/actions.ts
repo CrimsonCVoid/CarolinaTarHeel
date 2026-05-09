@@ -71,7 +71,7 @@ export async function publishPage(siteId: string, slug: string) {
 
   // Audit
   await supabase.from('audit_log').insert({
-    org_id: '00000000-0000-0000-0000-000000000000', // overwritten by trigger if you add one; otherwise set via admin
+    org_id: site.org_id,
     site_id: siteId,
     user_id: user.id,
     action: 'page.publish',

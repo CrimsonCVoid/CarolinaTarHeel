@@ -1,6 +1,6 @@
 'use client';
 import { Input, Label } from '@tarheel/ui';
-import type { FieldComponentProps } from '../types.js';
+import type { FieldComponentProps } from '../types';
 
 export function TextField({ name, meta, value, onChange, error }: FieldComponentProps) {
   const v = typeof value === 'string' ? value : '';

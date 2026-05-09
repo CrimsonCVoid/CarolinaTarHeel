@@ -1,5 +1,5 @@
 import { Facebook, Instagram, type LucideIcon } from 'lucide-react';
-import type { Social } from '../types.js';
+import type { Social } from '../types';
 
 const ICONS: Partial<Record<keyof Social, LucideIcon>> = {
   instagram: Instagram,

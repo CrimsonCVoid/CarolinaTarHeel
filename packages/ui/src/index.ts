@@ -1,8 +1,8 @@
-export { cn } from './cn.js';
-export { Button, buttonVariants, type ButtonProps } from './button.js';
-export { Container } from './container.js';
-export { Input } from './input.js';
-export { Textarea } from './textarea.js';
-export { Label } from './label.js';
-export { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from './card.js';
-export { Badge } from './badge.js';
+export { cn } from './cn';
+export { Button, buttonVariants, type ButtonProps } from './button';
+export { Container } from './container';
+export { Input } from './input';
+export { Textarea } from './textarea';
+export { Label } from './label';
+export { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from './card';
+export { Badge } from './badge';
